@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CaesarCipher.cs" />
+    <Compile Include="Cipher.cs" />
     <Compile Include="ModularInverter.cs" />
     <Compile Include="FileNames.cs" />
     <Compile Include="Program.cs" />
