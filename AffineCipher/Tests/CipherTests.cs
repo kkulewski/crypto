@@ -61,5 +61,17 @@ namespace Test
 
             Assert.Equal(cipher.RunCaesarCryptoanalysisWithPlain(input, output), key);
         }
+
+        [Fact]
+        public void RunCaesarCryptoanalysisWithPlainMixedWithNumbersAndPunctuationReturnsCorrectKey()
+        {
+            var cipher = new Cipher();
+
+            var key = 22;
+            var input = ".3Tes1t \n14 A, CC5.";
+            var output = cipher.EncryptCaesar(input, key);
+
+            Assert.Equal(cipher.RunCaesarCryptoanalysisWithPlain(input, output), key);
+        }
     }
 }
