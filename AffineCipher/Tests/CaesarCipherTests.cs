@@ -11,8 +11,9 @@ namespace Test
         [Fact]
         public void EncryptWithKey7ConvertsTestToAlza()
         {
+            var key = new Key(1, 7);
             var input = "Test";
-            var output = _cipher.Encrypt(input, 7);
+            var output = _cipher.Encrypt(input, key);
 
             Assert.Equal("Alza", output);
         }
@@ -20,8 +21,9 @@ namespace Test
         [Fact]
         public void DecryptWithKey7ConvertsAlzaToTest()
         {
+            var key = new Key(1, 7);
             var input = "Alza";
-            var output = _cipher.Decrypt(input, 7);
+            var output = _cipher.Decrypt(input, key);
 
             Assert.Equal("Test", output);
         }
@@ -29,7 +31,7 @@ namespace Test
         [Fact]
         public void EncryptAndDecryptCaesarReturnsOriginalInput()
         {
-            var key = 13;
+            var key = new Key(1, 13);
             var input =
                 "Look again at that dot. That\'s here. That\'s home. That\'s us. " +
                 "On it everyone you love, everyone you know, everyone you ever heard of, " +
@@ -49,21 +51,21 @@ namespace Test
         [Fact]
         public void RunCryptoanalysisWithPlainReturnsCorrectKey()
         {
-            var key = 11;
+            var key = new Key(1, 11);
             var input = "Test";
             var output = _cipher.Encrypt(input, key);
 
-            Assert.Equal(_cipher.RunCryptoanalysisWithPlain(input, output), key);
+            Assert.Equal(_cipher.RunCryptoanalysisWithPlain(input, output).Addend, key.Addend);
         }
 
         [Fact]
         public void RunCryptoanalysisWithPlainMixedWithNumbersAndPunctuationReturnsCorrectKey()
         {
-            var key = 22;
+            var key = new Key(1, 22);
             var input = ".3Tes1t \n14 A, CC5.";
             var output = _cipher.Encrypt(input, key);
 
-            Assert.Equal(_cipher.RunCryptoanalysisWithPlain(input, output), key);
+            Assert.Equal(_cipher.RunCryptoanalysisWithPlain(input, output).Addend, key.Addend);
         }
     }
 }
