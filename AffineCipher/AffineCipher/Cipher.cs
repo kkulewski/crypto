@@ -42,5 +42,20 @@
 
             return new string(chars);
         }
+
+        public int RunCaesarCryptoanalysisWithPlain(string plain, string encrypted)
+        {
+            var plainChars = plain.ToCharArray();
+            var encryptedChars = encrypted.ToCharArray();
+
+            int i = 0;
+            // loop until a letter is found
+            while (!((plainChars[i] >= 'a' && plainChars[i] <= 'z') || (plainChars[i] >= 'A' && plainChars[i] <= 'Z')))
+            {
+                i++;
+            }
+
+            return (encryptedChars[i] - plainChars[i] + AlphabetSize) % AlphabetSize;
+        }
     }
 }
