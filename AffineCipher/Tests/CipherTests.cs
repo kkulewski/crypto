@@ -25,7 +25,7 @@ namespace Test
             var input = "Alza";
             var output = cipher.DecryptCaesar(input, 7);
 
-            Assert.Equal(input, input);
+            Assert.Equal("Test", output);
         }
     }
 }
