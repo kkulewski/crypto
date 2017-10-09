@@ -1,8 +1,8 @@
 ﻿namespace AffineCipher
 {
-    class Cipher
+    public class Cipher
     {
-        public string CipherCaesar(string input, int key)
+        public static string CipherCaesar(string input, int key)
         {
             var alphabetSize = 'z' - 'a' + 1;
             var chars = input.ToCharArray();
@@ -20,7 +20,7 @@
                 }
             }
 
-            return chars.ToString();
+            return new string(chars);
         }
     }
 }
