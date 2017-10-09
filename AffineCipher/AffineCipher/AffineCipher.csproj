@@ -45,6 +45,7 @@
     <Compile Include="AffineCipher.cs" />
     <Compile Include="CaesarCipher.cs" />
     <Compile Include="Cipher.cs" />
+    <Compile Include="Key.cs" />
     <Compile Include="OperationHandler.cs" />
     <Compile Include="ModularInverter.cs" />
     <Compile Include="FileNames.cs" />
