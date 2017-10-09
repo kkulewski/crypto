@@ -2,7 +2,7 @@
 {
     public class Cipher
     {
-        public static string CipherCaesar(string input, int key)
+        public static string EncryptCaesar(string input, int key)
         {
             var alphabetSize = 'z' - 'a' + 1;
             var chars = input.ToCharArray();

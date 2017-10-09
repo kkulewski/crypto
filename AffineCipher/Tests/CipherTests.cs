@@ -7,10 +7,10 @@ namespace Test
     public class CipherTests
     {
         [Fact]
-        public void CaesarWithKey7ConvertsTestToAlza()
+        public void EncryptCaesarWithKey7ConvertsTestToAlza()
         {
             var input = "Test";
-            var output = Cipher.CipherCaesar(input, 7);
+            var output = Cipher.EncryptCaesar(input, 7);
 
             Assert.Equal("Alza", output);
         }
