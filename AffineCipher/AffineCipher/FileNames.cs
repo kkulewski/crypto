@@ -1,6 +1,6 @@
 ﻿namespace AffineCipher
 {
-    public class PathConstants
+    public class FileNames
     {
         public const string SourceFile = "plain.txt";
 
