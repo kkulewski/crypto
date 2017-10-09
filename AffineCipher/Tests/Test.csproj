@@ -61,7 +61,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CipherTests.cs" />
+    <Compile Include="CaesarCipherTests.cs" />
     <Compile Include="ModularInverterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

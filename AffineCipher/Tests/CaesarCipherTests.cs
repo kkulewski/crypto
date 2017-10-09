@@ -4,35 +4,31 @@ using Xunit;
 
 namespace Test
 {
-    public class CipherTests
+    public class CaesarCipherTests
     {
-        [Fact]
-        public void EncryptCaesarWithKey7ConvertsTestToAlza()
-        {
-            var cipher = new Cipher();
+        private readonly CaesarCipher _cipher = new CaesarCipher();
 
+        [Fact]
+        public void EncryptWithKey7ConvertsTestToAlza()
+        {
             var input = "Test";
-            var output = cipher.EncryptCaesar(input, 7);
+            var output = _cipher.Encrypt(input, 7);
 
             Assert.Equal("Alza", output);
         }
 
         [Fact]
-        public void DecryptCaesarWithKey7ConvertsAlzaToTest()
+        public void DecryptWithKey7ConvertsAlzaToTest()
         {
-            var cipher = new Cipher();
-
             var input = "Alza";
-            var output = cipher.DecryptCaesar(input, 7);
+            var output = _cipher.Decrypt(input, 7);
 
             Assert.Equal("Test", output);
         }
 
         [Fact]
-        public void EncryptCaesarAndDecryptCaesarReturnsOriginalInput()
+        public void EncryptAndDecryptCaesarReturnsOriginalInput()
         {
-            var cipher = new Cipher();
-
             var key = 13;
             var input =
                 "Look again at that dot. That\'s here. That\'s home. That\'s us. " +
@@ -44,34 +40,30 @@ namespace Test
                 "every teacher of morals, every corrupt politician, every \"superstar,\" every \"supreme leader,\" " +
                 "every saint and sinner in the history of our species lived there-on a mote of dust suspended in a sunbeam.";
 
-            var encrypted = cipher.EncryptCaesar(input, key);
-            var decrypted = cipher.DecryptCaesar(encrypted, key);
+            var encrypted = _cipher.Encrypt(input, key);
+            var decrypted = _cipher.Decrypt(encrypted, key);
 
             Assert.Equal(decrypted, input);
         }
 
         [Fact]
-        public void RunCaesarCryptoanalysisWithPlainReturnsCorrectKey()
+        public void RunCryptoanalysisWithPlainReturnsCorrectKey()
         {
-            var cipher = new Cipher();
-
             var key = 11;
             var input = "Test";
-            var output = cipher.EncryptCaesar(input, key);
+            var output = _cipher.Encrypt(input, key);
 
-            Assert.Equal(cipher.RunCaesarCryptoanalysisWithPlain(input, output), key);
+            Assert.Equal(_cipher.RunCryptoanalysisWithPlain(input, output), key);
         }
 
         [Fact]
-        public void RunCaesarCryptoanalysisWithPlainMixedWithNumbersAndPunctuationReturnsCorrectKey()
+        public void RunCryptoanalysisWithPlainMixedWithNumbersAndPunctuationReturnsCorrectKey()
         {
-            var cipher = new Cipher();
-
             var key = 22;
             var input = ".3Tes1t \n14 A, CC5.";
-            var output = cipher.EncryptCaesar(input, key);
+            var output = _cipher.Encrypt(input, key);
 
-            Assert.Equal(cipher.RunCaesarCryptoanalysisWithPlain(input, output), key);
+            Assert.Equal(_cipher.RunCryptoanalysisWithPlain(input, output), key);
         }
     }
 }
