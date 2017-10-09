@@ -1,10 +1,8 @@
 ﻿namespace AffineCipher
 {
-    public class CaesarCipher
+    public class CaesarCipher : Cipher
     {
-        public const int AlphabetSize = 'z' - 'a' + 1;
-
-        public string Encrypt(string input, int key)
+        public override string Encrypt(string input, int key, int _ = 1)
         {
             var chars = input.ToCharArray();
             for(int i = 0; i < chars.Length; i++)
@@ -23,7 +21,7 @@
             return new string(chars);
         }
 
-        public string Decrypt(string input, int key)
+        public override string Decrypt(string input, int key, int _ = 1)
         {
             var chars = input.ToCharArray();
             for (int i = 0; i < chars.Length; i++)
@@ -43,7 +41,7 @@
             return new string(chars);
         }
 
-        public int RunCryptoanalysisWithPlain(string plain, string encrypted)
+        public override int RunCryptoanalysisWithPlain(string plain, string encrypted)
         {
             var plainChars = plain.ToCharArray();
             var encryptedChars = encrypted.ToCharArray();
