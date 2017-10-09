@@ -2,17 +2,17 @@
 {
     class AffineCipher : Cipher
     {
-        public override string Encrypt(string input, int keyAddend, int keyMultiplier = 1)
+        public override string Encrypt(string input, Key key)
         {
             throw new System.NotImplementedException();
         }
 
-        public override string Decrypt(string input, int keyAddend, int keyMultiplier = 1)
+        public override string Decrypt(string input, Key key)
         {
             throw new System.NotImplementedException();
         }
 
-        public override int RunCryptoanalysisWithPlain(string plain, string encrypted)
+        public override Key RunCryptoanalysisWithPlain(string plain, string encrypted)
         {
             throw new System.NotImplementedException();
         }
