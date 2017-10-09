@@ -49,5 +49,17 @@ namespace Test
 
             Assert.Equal(decrypted, input);
         }
+
+        [Fact]
+        public void RunCaesarCryptoanalysisWithPlainReturnsCorrectKey()
+        {
+            var cipher = new Cipher();
+
+            var key = 11;
+            var input = "Test";
+            var output = cipher.EncryptCaesar(input, key);
+
+            Assert.Equal(cipher.RunCaesarCryptoanalysisWithPlain(input, output), key);
+        }
     }
 }
