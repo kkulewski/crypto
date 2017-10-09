@@ -6,7 +6,7 @@ namespace Test
 {
     public class CaesarCipherTests
     {
-        private readonly CaesarCipher _cipher = new CaesarCipher();
+        private readonly Cipher _cipher = new CaesarCipher();
 
         [Fact]
         public void EncryptWithKey7ConvertsTestToAlza()
