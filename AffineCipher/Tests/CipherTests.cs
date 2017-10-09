@@ -9,8 +9,10 @@ namespace Test
         [Fact]
         public void EncryptCaesarWithKey7ConvertsTestToAlza()
         {
+            var cipher = new Cipher();
+
             var input = "Test";
-            var output = Cipher.EncryptCaesar(input, 7);
+            var output = cipher.EncryptCaesar(input, 7);
 
             Assert.Equal("Alza", output);
         }
@@ -18,8 +20,10 @@ namespace Test
         [Fact]
         public void DecryptCaesarWithKey7ConvertsAlzaToTest()
         {
+            var cipher = new Cipher();
+
             var input = "Alza";
-            var output = Cipher.DecryptCaesar(input, 7);
+            var output = cipher.DecryptCaesar(input, 7);
 
             Assert.Equal(input, input);
         }
