@@ -2,9 +2,9 @@
 using AffineCipher;
 using Xunit;
 
-namespace Tests
+namespace Test
 {
-    public class ModularInverterTest
+    public class ModularInverterTests
     {
         [Fact]
         public void InversionOf7Mod26Exists()
