@@ -41,7 +41,7 @@ namespace AffineCipher.Ciphers
                     var offset = 'a' - 1;
                     var currentCharacter = chars[i] - offset;
 
-                    if (!ModuloHelpers.GetInversionNaive(key.Multiplier, AlphabetSize, out int inversion))
+                    if (!Modulo.GetInversionNaive(key.Multiplier, AlphabetSize, out int inversion))
                     {
                         throw new Exception("Character inversion does not exist.");
                     }
@@ -55,7 +55,7 @@ namespace AffineCipher.Ciphers
                     var offset = 'A' - 1;
                     var currentCharacter = chars[i] - offset;
 
-                    if (!ModuloHelpers.GetInversionNaive(key.Multiplier, AlphabetSize, out int inversion))
+                    if (!Modulo.GetInversionNaive(key.Multiplier, AlphabetSize, out int inversion))
                     {
                         throw new Exception("Character inversion does not exist.");
                     }
@@ -75,28 +75,12 @@ namespace AffineCipher.Ciphers
 
         private void VerifyKey(Key key)
         {
-            if (!AreRelativelyPrime(key.Multiplier, AlphabetSize))
+            if (!Modulo.RelativelyPrime(key.Multiplier, AlphabetSize))
             {
                 var message = string.Format("Key multiplier ({0}) is not relatively prime to alphabet length ({1})",
                     key.Multiplier, AlphabetSize);
                 throw new Exception(message);
             }
-        }
-
-        private bool AreRelativelyPrime(int a, int b)
-        {
-            return GreatestCommonDivisor(a, b) == 1;
-        }
-
-        private int GreatestCommonDivisor(int a, int b)
-        {
-            while (b > 0)
-            {
-                var x = a % b;
-                a = b;
-                b = x;
-            }
-            return a;
         }
     }
 }

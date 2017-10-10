@@ -1,6 +1,6 @@
 ﻿namespace AffineCipher
 {
-    public static class ModuloHelpers
+    public static class Modulo
     {
         public static bool GetInversionNaive(int number, int modulo, out int inversion)
         {
@@ -17,6 +17,22 @@
             }
 
             return false;
+        }
+
+        public static bool RelativelyPrime(int a, int b)
+        {
+            return GreatestCommonDivisor(a, b) == 1;
+        }
+
+        public static int GreatestCommonDivisor(int a, int b)
+        {
+            while (b > 0)
+            {
+                var x = a % b;
+                a = b;
+                b = x;
+            }
+            return a;
         }
     }
 }
