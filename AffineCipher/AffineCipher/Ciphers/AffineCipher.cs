@@ -41,7 +41,7 @@ namespace AffineCipher.Ciphers
                     var offset = 'a' - 1;
                     var currentCharacter = chars[i] - offset;
 
-                    if (!ModularInverter.GetInversionNaive(key.Multiplier, AlphabetSize, out int inversion))
+                    if (!ModuloHelpers.GetInversionNaive(key.Multiplier, AlphabetSize, out int inversion))
                     {
                         throw new Exception("Character inversion does not exist.");
                     }
@@ -55,7 +55,7 @@ namespace AffineCipher.Ciphers
                     var offset = 'A' - 1;
                     var currentCharacter = chars[i] - offset;
 
-                    if (!ModularInverter.GetInversionNaive(key.Multiplier, AlphabetSize, out int inversion))
+                    if (!ModuloHelpers.GetInversionNaive(key.Multiplier, AlphabetSize, out int inversion))
                     {
                         throw new Exception("Character inversion does not exist.");
                     }

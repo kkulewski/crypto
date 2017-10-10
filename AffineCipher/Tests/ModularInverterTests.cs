@@ -9,26 +9,26 @@ namespace Test
         [Fact]
         public void InversionOf7Mod26Exists()
         {
-            Assert.True(ModularInverter.GetInversionNaive(7, 26, out int _));
+            Assert.True(ModuloHelpers.GetInversionNaive(7, 26, out int _));
         }
 
         [Fact]
         public void InversionOf7Mod26Returns15()
         {
-            ModularInverter.GetInversionNaive(7, 26, out int inverse);
+            ModuloHelpers.GetInversionNaive(7, 26, out int inverse);
             Assert.Equal(15, inverse);
         }
 
         [Fact]
         public void InversionOf4Mod26DoesNotExist()
         {
-            Assert.False(ModularInverter.GetInversionNaive(4, 26, out int _));
+            Assert.False(ModuloHelpers.GetInversionNaive(4, 26, out int _));
         }
 
         [Fact]
         public void ReturnsZeroWhenInverseDoesNotExist()
         {
-            ModularInverter.GetInversionNaive(4, 26, out int inverse);
+            ModuloHelpers.GetInversionNaive(4, 26, out int inverse);
             Assert.Equal(0, inverse);
         }
     }

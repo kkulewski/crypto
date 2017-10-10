@@ -1,6 +1,6 @@
 ﻿namespace AffineCipher
 {
-    public static class ModularInverter
+    public static class ModuloHelpers
     {
         public static bool GetInversionNaive(int number, int modulo, out int inversion)
         {
