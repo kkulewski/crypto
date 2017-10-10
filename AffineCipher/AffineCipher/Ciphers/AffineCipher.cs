@@ -34,30 +34,12 @@ namespace AffineCipher.Ciphers
             {
                 if (chars[i] >= 'a' && chars[i] <= 'z')
                 {
-                    var offset = 'a' - 1;
-                    var currentCharacter = chars[i] - offset;
-
-                    if (!Modulo.GetInversionNaive(key.Multiplier, AlphabetSize, out int inversion))
-                    {
-                        throw new Exception("Character inversion does not exist.");
-                    }
-
-                    var c = ((currentCharacter - key.Addend) * inversion) % AlphabetSize + offset;
-                    chars[i] = (char)c;
+                    chars[i] = DecryptCharacter(chars[i], 'a' - 1, key);
                 }
 
                 if (chars[i] >= 'A' && chars[i] <= 'Z')
                 {
-                    var offset = 'A' - 1;
-                    var currentCharacter = chars[i] - offset;
-
-                    if (!Modulo.GetInversionNaive(key.Multiplier, AlphabetSize, out int inversion))
-                    {
-                        throw new Exception("Character inversion does not exist.");
-                    }
-
-                    var c = ((currentCharacter - key.Addend) * inversion) % AlphabetSize + offset;
-                    chars[i] = (char)c;
+                    chars[i] = DecryptCharacter(chars[i], 'A' - 1, key);
                 }
             }
 
@@ -72,6 +54,16 @@ namespace AffineCipher.Ciphers
         private char EncryptCharacter(int current, int offset, Key key)
         {
             return (char)(((current - offset) * key.Multiplier + key.Addend) % AlphabetSize + offset);
+        }
+
+        private char DecryptCharacter(int current, int offset, Key key)
+        {
+            if (!Modulo.GetInversionNaive(key.Multiplier, AlphabetSize, out int inversion))
+            {
+                throw new Exception("Character inversion does not exist.");
+            }
+
+            return (char) (((current - offset - key.Addend) * inversion) % AlphabetSize + offset);
         }
 
         private void VerifyKey(Key key)
