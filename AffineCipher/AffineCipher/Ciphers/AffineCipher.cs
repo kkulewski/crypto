@@ -1,4 +1,4 @@
-﻿namespace AffineCipher
+﻿namespace AffineCipher.Ciphers
 {
     class AffineCipher : Cipher
     {

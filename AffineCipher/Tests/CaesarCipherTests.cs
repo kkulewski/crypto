@@ -1,5 +1,5 @@
-﻿using System;
-using AffineCipher;
+﻿using AffineCipher;
+using AffineCipher.Ciphers;
 using Xunit;
 
 namespace Test

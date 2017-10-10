@@ -1,4 +1,5 @@
 ﻿using System;
+using AffineCipher.Ciphers;
 
 namespace AffineCipher
 {
@@ -29,7 +30,7 @@ namespace AffineCipher
                     break;
 
                 case "-a":
-                    cipher = new AffineCipher();
+                    cipher = new Ciphers.AffineCipher();
                     break;
 
                 default:
