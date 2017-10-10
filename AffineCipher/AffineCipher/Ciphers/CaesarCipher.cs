@@ -11,12 +11,12 @@ namespace AffineCipher.Ciphers
             {
                 if (chars[i] >= 'a' && chars[i] <= 'z')
                 {
-                    chars[i] = (char)((chars[i] - 'a' + key.Addend) % AlphabetSize + 'a');
+                    chars[i] = EncryptCharacter(chars[i], 'a' - 1, key);
                 }
 
                 if (chars[i] >= 'A' && chars[i] <= 'Z')
                 {
-                    chars[i] = (char)((chars[i] - 'A' + key.Addend) % AlphabetSize + 'A');
+                    chars[i] = EncryptCharacter(chars[i], 'A' - 1, key);
                 }
             }
 
@@ -66,6 +66,11 @@ namespace AffineCipher.Ciphers
             var keyAddend = (encryptedChars[i] - plainChars[i] + AlphabetSize) % AlphabetSize;
             var keyMultiplier = 1;
             return new Key(keyMultiplier, keyAddend);
+        }
+
+        private char EncryptCharacter(int current, int offset, Key key)
+        {
+            return (char)((current - offset + key.Addend) % AlphabetSize + offset);
         }
     }
 }
