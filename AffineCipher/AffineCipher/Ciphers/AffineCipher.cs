@@ -68,7 +68,7 @@ namespace AffineCipher.Ciphers
 
         private char DecryptCharacter(int current, int offset, Key key)
         {
-            if (!Modulo.GetInversionNaive(key.Multiplier, AlphabetSize, out int inversion))
+            if (!Modulo.GetInversion(key.Multiplier, AlphabetSize, out int inversion))
             {
                 throw new Exception("Character inversion does not exist.");
             }
