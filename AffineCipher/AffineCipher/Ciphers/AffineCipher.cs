@@ -31,7 +31,41 @@ namespace AffineCipher.Ciphers
 
         public override string Decrypt(string input, Key key)
         {
-            throw new System.NotImplementedException();
+            VerifyKey(key);
+
+            var chars = input.ToCharArray();
+            for (int i = 0; i < chars.Length; i++)
+            {
+                if (chars[i] >= 'a' && chars[i] <= 'z')
+                {
+                    var offset = 'a' - 1;
+                    var currentCharacter = chars[i] - offset;
+
+                    if (!ModularInverter.GetInversionNaive(key.Multiplier, AlphabetSize, out int inversion))
+                    {
+                        throw new Exception("Character inversion does not exist.");
+                    }
+
+                    var c = ((currentCharacter - key.Addend) * inversion) % AlphabetSize + offset;
+                    chars[i] = (char)c;
+                }
+
+                if (chars[i] >= 'A' && chars[i] <= 'Z')
+                {
+                    var offset = 'A' - 1;
+                    var currentCharacter = chars[i] - offset;
+
+                    if (!ModularInverter.GetInversionNaive(key.Multiplier, AlphabetSize, out int inversion))
+                    {
+                        throw new Exception("Character inversion does not exist.");
+                    }
+
+                    var c = ((currentCharacter - key.Addend) * inversion) % AlphabetSize + offset;
+                    chars[i] = (char)c;
+                }
+            }
+
+            return new string(chars);
         }
 
         public override Key RunCryptoanalysisWithPlain(string plain, string encrypted)
