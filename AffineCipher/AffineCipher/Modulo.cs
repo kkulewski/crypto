@@ -2,7 +2,7 @@
 {
     public static class Modulo
     {
-        public static bool GetInversionNaive(int number, int modulo, out int inversion)
+        public static bool GetInversion(int number, int modulo, out int inversion)
         {
             inversion = 0;
 
