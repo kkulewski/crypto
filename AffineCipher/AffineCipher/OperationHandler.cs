@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using AffineCipher.Ciphers;
 
 namespace AffineCipher
@@ -101,10 +102,13 @@ namespace AffineCipher
                     decrypted.Add(_cipher.Decrypt(encrypted, new Key(1, i)));
                 }
 
+                StringBuilder output = new StringBuilder();
                 foreach (var s in decrypted)
                 {
-                    File.AppendAllText(FileNames.ExtraFile, s);
+                    output.AppendLine(s);
                 }
+
+                File.WriteAllText(FileNames.ExtraFile, output.ToString());
             }
             catch (Exception e)
             {
