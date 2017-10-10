@@ -65,7 +65,7 @@ namespace AffineCipher
         {
             try
             {
-                var plain = File.ReadAllText(FileNames.SourceFile, Encoding.Default);
+                var plain = File.ReadAllText(FileNames.ExtraFile, Encoding.Default);
                 var encrypted = File.ReadAllText(FileNames.EncryptedFile, Encoding.Default);
 
                 var key = _cipher.RunCryptoanalysisWithPlain(plain, encrypted);
