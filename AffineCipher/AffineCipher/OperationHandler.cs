@@ -89,5 +89,33 @@ namespace AffineCipher
             result = "Found key and decrypted.";
             return true;
         }
+
+        public bool RunCryptoanalysisWithoutPlain(out string result)
+        {
+            try
+            {
+                var encrypted = File.ReadAllText(FileNames.EncryptedFile);
+
+                List<string> decrypted = new List<string>();
+                for(int i = 1; i < _cipher.AlphabetSize; i++)
+                {
+                    // TODO: multiplier has to be taken care of
+                    decrypted.Add(_cipher.Decrypt(encrypted, new Key(1, i)));
+                }
+
+                foreach (var s in decrypted)
+                {
+                    File.AppendAllText(FileNames.ExtraFile, s);
+                }
+            }
+            catch (Exception e)
+            {
+                result = e.Message;
+                return false;
+            }
+
+            result = "Encrypted (brute force)";
+            return true;
+        }
     }
 }
