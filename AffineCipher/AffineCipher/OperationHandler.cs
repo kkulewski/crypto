@@ -15,7 +15,7 @@ namespace AffineCipher
             _cipher = cipher;
         }
 
-        public bool Encrypt(out string result)
+        public OperationResult Encrypt()
         {
             try
             {
@@ -32,15 +32,13 @@ namespace AffineCipher
             }
             catch (Exception e)
             {
-                result = e.Message;
-                return false;
+                return new OperationResult(false, e.Message);
             }
 
-            result = "Encrypted.";
-            return true;
+            return new OperationResult(true, "Encrypted");
         }
 
-        public bool Decrypt(out string result)
+        public OperationResult Decrypt()
         {
             try
             {
@@ -57,15 +55,13 @@ namespace AffineCipher
             }
             catch (Exception e)
             {
-                result = e.Message;
-                return false;
+                return new OperationResult(false, e.Message);
             }
 
-            result = "Decrypted.";
-            return true;
+            return new OperationResult(true, "Decrypted.");
         }
 
-        public bool RunCryptoanalysisWithPlain(out string result)
+        public OperationResult RunCryptoanalysisWithPlain()
         {
             try
             {
@@ -81,15 +77,13 @@ namespace AffineCipher
             }
             catch (Exception e)
             {
-                result = e.Message;
-                return false;
+                return new OperationResult(false, e.Message);
             }
 
-            result = "Found key and decrypted.";
-            return true;
+            return new OperationResult(true, "Found key and decrypted.");
         }
 
-        public bool RunCryptoanalysisWithoutPlain(out string result)
+        public OperationResult RunCryptoanalysisWithoutPlain()
         {
             try
             {
@@ -112,12 +106,10 @@ namespace AffineCipher
             }
             catch (Exception e)
             {
-                result = e.Message;
-                return false;
+                return new OperationResult(false, e.Message);
             }
-
-            result = "Encrypted (brute force)";
-            return true;
+            
+            return new OperationResult(true, "Encrypted (brute force)");
         }
     }
 }
