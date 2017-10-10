@@ -34,58 +34,46 @@ namespace AffineCipher
                     break;
 
                 default:
-                    PrintError("Unknown cipher type.");
+                    HandleOperationResult(new OperationResult(false, "Unknown cipher type."));
                     return;
             }
 
-            var fileOperator = new OperationHandler(cipher);
-
-            string result;
+            var handler = new OperationHandler(cipher);
             switch (action)
             {
                 case "-e":
-                    if (fileOperator.Encrypt(out result))
-                        PrintSuccess(result);
-                    else
-                        PrintError(result);
+                    HandleOperationResult(handler.Encrypt());
                     break;
 
                 case "-d":
-                    if (fileOperator.Decrypt(out result))
-                        PrintSuccess(result);
-                    else
-                        PrintError(result);
+                    HandleOperationResult(handler.Decrypt());
                     break;
 
                 case "-j":
-                    if (fileOperator.RunCryptoanalysisWithPlain(out result))
-                        PrintSuccess(result);
-                    else
-                        PrintError(result);
+                    HandleOperationResult(handler.RunCryptoanalysisWithPlain());
                     break;
 
                 case "-k":
-                    if (fileOperator.RunCryptoanalysisWithoutPlain(out result))
-                        PrintSuccess(result);
-                    else
-                        PrintError(result);
+                    HandleOperationResult(handler.RunCryptoanalysisWithoutPlain());
                     break;
 
                 default:
-                    PrintError("Unknown action.");
+                    HandleOperationResult(new OperationResult(false, "Unknown action."));
                     return;
             }
 
         }
 
-        public static void PrintSuccess(string message)
+        public static void HandleOperationResult(OperationResult o)
         {
-            Console.WriteLine("## SUCCESS: " + message);
-        }
-
-        public static void PrintError(string message)
-        {
-            Console.WriteLine("## ERROR: " + message);
+            if (o.Success)
+            {
+                Console.WriteLine("## SUCCESS: " + o.Message);
+            }
+            else
+            {
+                Console.WriteLine("## ERROR: " + o.Message);
+            }
         }
     }
 }
