@@ -65,5 +65,29 @@ namespace AffineCipher
             result = "Decrypted.";
             return true;
         }
+
+        public bool RunCryptoanalysisWithPlain(out string result)
+        {
+            try
+            {
+                var plain = File.ReadAllText(FileNames.SourceFile);
+                var encrypted = File.ReadAllText(FileNames.EncryptedFile);
+
+                var key = _cipher.RunCryptoanalysisWithPlain(plain, encrypted);
+                string keyString = string.Format("{0} {1}", key.Multiplier, key.Addend);
+                File.WriteAllText(FileNames.KeyFile, keyString);
+
+                var decrypted = _cipher.Decrypt(encrypted, key);
+                File.WriteAllText(FileNames.DecryptedFile, decrypted);
+            }
+            catch (Exception e)
+            {
+                result = e.Message;
+                return false;
+            }
+
+            result = "Found key and decrypted.";
+            return true;
+        }
     }
 }
