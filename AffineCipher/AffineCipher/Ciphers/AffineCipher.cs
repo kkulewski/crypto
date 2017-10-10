@@ -13,16 +13,12 @@ namespace AffineCipher.Ciphers
             {
                 if (chars[i] >= 'a' && chars[i] <= 'z')
                 {
-                    var offset = 'a' - 1;
-                    var c = ((chars[i] - offset) * key.Multiplier + key.Addend) % AlphabetSize + offset;
-                    chars[i] = (char) c;
+                    chars[i] = EncryptCharacter(chars[i], 'a' - 1, key);
                 }
 
                 if (chars[i] >= 'A' && chars[i] <= 'Z')
                 {
-                    var offset = 'A' - 1;
-                    var c = ((chars[i] - offset) * key.Multiplier + key.Addend) % AlphabetSize + offset;
-                    chars[i] = (char) c;
+                    chars[i] = EncryptCharacter(chars[i], 'A' - 1, key);
                 }
             }
 
@@ -71,6 +67,11 @@ namespace AffineCipher.Ciphers
         public override Key RunCryptoanalysisWithPlain(string plain, string encrypted)
         {
             throw new System.NotImplementedException();
+        }
+
+        private char EncryptCharacter(int current, int offset, Key key)
+        {
+            return (char)(((current - offset) * key.Multiplier + key.Addend) % AlphabetSize + offset);
         }
 
         private void VerifyKey(Key key)
