@@ -30,13 +30,12 @@ namespace AffineCipher.Ciphers
             {
                 if (chars[i] >= 'a' && chars[i] <= 'z')
                 {
-                    // add alphabetSize to ensure mod on non-negative integers
-                    chars[i] = (char)((chars[i] - 'a' - key.Addend + AlphabetSize) % AlphabetSize + 'a');
+                    chars[i] = DecryptCharacter(chars[i], 'a' - 1, key);
                 }
 
                 if (chars[i] >= 'A' && chars[i] <= 'Z')
                 {
-                    chars[i] = (char)((chars[i] - 'A' - key.Addend + AlphabetSize) % AlphabetSize + 'A');
+                    chars[i] = DecryptCharacter(chars[i], 'A' - 1, key);
                 }
             }
 
@@ -71,6 +70,12 @@ namespace AffineCipher.Ciphers
         private char EncryptCharacter(int current, int offset, Key key)
         {
             return (char)((current - offset + key.Addend) % AlphabetSize + offset);
+        }
+
+        private char DecryptCharacter(int current, int offset, Key key)
+        {
+            // add alphabetSize to ensure mod on non-negative integers
+            return (char)((current - offset - key.Addend + AlphabetSize) % AlphabetSize + offset);
         }
     }
 }
