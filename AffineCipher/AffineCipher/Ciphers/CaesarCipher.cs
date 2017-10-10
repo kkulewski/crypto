@@ -1,4 +1,6 @@
-﻿namespace AffineCipher.Ciphers
+﻿using System;
+
+namespace AffineCipher.Ciphers
 {
     public class CaesarCipher : Cipher
     {
@@ -47,10 +49,18 @@
             var encryptedChars = encrypted.ToCharArray();
 
             int i = 0;
-            // loop until a letter is found
-            while (!((plainChars[i] >= 'a' && plainChars[i] <= 'z') || (plainChars[i] >= 'A' && plainChars[i] <= 'Z')))
+
+            try
             {
-                i++;
+                // loop until a letter is found
+                while (!((plainChars[i] >= 'a' && plainChars[i] <= 'z') || (plainChars[i] >= 'A' && plainChars[i] <= 'Z')))
+                {
+                    i++;
+                }
+            }
+            catch (Exception)
+            {
+                throw new Exception("Key cannot be found.");
             }
 
             var keyAddend = (encryptedChars[i] - plainChars[i] + AlphabetSize) % AlphabetSize;
