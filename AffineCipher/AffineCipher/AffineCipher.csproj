@@ -47,7 +47,7 @@
     <Compile Include="Ciphers\Cipher.cs" />
     <Compile Include="Key.cs" />
     <Compile Include="OperationHandler.cs" />
-    <Compile Include="ModuloHelpers.cs" />
+    <Compile Include="Modulo.cs" />
     <Compile Include="FileNames.cs" />
     <Compile Include="OperationResult.cs" />
     <Compile Include="Program.cs" />
