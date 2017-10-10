@@ -21,13 +21,14 @@ namespace AffineCipher
             try
             {
                 var input = File.ReadAllText(FileNames.SourceFile);
-                var key = File.ReadAllText(FileNames.KeyFile);
+                var keyInput = File.ReadAllText(FileNames.KeyFile);
 
-                string[] keySplitted = key.Split(' ');
-                var keyMultiplier = int.Parse(keySplitted[0]);
-                var keyAddend = int.Parse(keySplitted[1]);
+                string[] keySplitted = keyInput.Split(' ');
+                var multiplier = int.Parse(keySplitted[0]);
+                var addend = int.Parse(keySplitted[1]);
+                var key = new Key(multiplier, addend);
 
-                var encrypted = _cipher.Encrypt(input, keyAddend, keyMultiplier);
+                var encrypted = _cipher.Encrypt(input, key);
                 File.WriteAllText(FileNames.EncryptedFile, encrypted);
             }
             catch (Exception e)
@@ -45,13 +46,14 @@ namespace AffineCipher
             try
             {
                 var input = File.ReadAllText(FileNames.EncryptedFile);
-                var key = File.ReadAllText(FileNames.KeyFile);
+                var keyInput = File.ReadAllText(FileNames.KeyFile);
 
-                string[] keySplitted = key.Split(' ');
-                var keyMultiplier = int.Parse(keySplitted[0]);
-                var keyAddend = int.Parse(keySplitted[1]);
+                string[] keySplitted = keyInput.Split(' ');
+                var multiplier = int.Parse(keySplitted[0]);
+                var addend = int.Parse(keySplitted[1]);
+                var key = new Key(multiplier, addend);
 
-                var decrypted = _cipher.Decrypt(input, keyAddend, keyMultiplier);
+                var decrypted = _cipher.Decrypt(input, key);
                 File.WriteAllText(FileNames.DecryptedFile, decrypted);
             }
             catch (Exception e)
