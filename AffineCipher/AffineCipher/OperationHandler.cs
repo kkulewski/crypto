@@ -19,8 +19,8 @@ namespace AffineCipher
         {
             try
             {
-                var input = File.ReadAllText(FileNames.SourceFile);
-                var keyInput = File.ReadAllText(FileNames.KeyFile);
+                var input = File.ReadAllText(FileNames.SourceFile, Encoding.Default);
+                var keyInput = File.ReadAllText(FileNames.KeyFile, Encoding.Default);
 
                 string[] keySplitted = keyInput.Split(' ');
                 var multiplier = int.Parse(keySplitted[0]);
@@ -28,7 +28,7 @@ namespace AffineCipher
                 var key = new Key(multiplier, addend);
 
                 var encrypted = _cipher.Encrypt(input, key);
-                File.WriteAllText(FileNames.EncryptedFile, encrypted);
+                File.WriteAllText(FileNames.EncryptedFile, encrypted, Encoding.Default);
             }
             catch (Exception e)
             {
@@ -42,8 +42,8 @@ namespace AffineCipher
         {
             try
             {
-                var input = File.ReadAllText(FileNames.EncryptedFile);
-                var keyInput = File.ReadAllText(FileNames.KeyFile);
+                var input = File.ReadAllText(FileNames.EncryptedFile, Encoding.Default);
+                var keyInput = File.ReadAllText(FileNames.KeyFile, Encoding.Default);
 
                 string[] keySplitted = keyInput.Split(' ');
                 var multiplier = int.Parse(keySplitted[0]);
@@ -51,7 +51,7 @@ namespace AffineCipher
                 var key = new Key(multiplier, addend);
 
                 var decrypted = _cipher.Decrypt(input, key);
-                File.WriteAllText(FileNames.DecryptedFile, decrypted);
+                File.WriteAllText(FileNames.DecryptedFile, decrypted, Encoding.Default);
             }
             catch (Exception e)
             {
@@ -65,15 +65,15 @@ namespace AffineCipher
         {
             try
             {
-                var plain = File.ReadAllText(FileNames.SourceFile);
-                var encrypted = File.ReadAllText(FileNames.EncryptedFile);
+                var plain = File.ReadAllText(FileNames.SourceFile, Encoding.Default);
+                var encrypted = File.ReadAllText(FileNames.EncryptedFile, Encoding.Default);
 
                 var key = _cipher.RunCryptoanalysisWithPlain(plain, encrypted);
                 string keyString = string.Format("{0} {1}", key.Multiplier, key.Addend);
-                File.WriteAllText(FileNames.KeyFile, keyString);
+                File.WriteAllText(FileNames.KeyFile, keyString, Encoding.Default);
 
                 var decrypted = _cipher.Decrypt(encrypted, key);
-                File.WriteAllText(FileNames.DecryptedFile, decrypted);
+                File.WriteAllText(FileNames.DecryptedFile, decrypted, Encoding.Default);
             }
             catch (Exception e)
             {
@@ -87,7 +87,7 @@ namespace AffineCipher
         {
             try
             {
-                var encrypted = File.ReadAllText(FileNames.EncryptedFile);
+                var encrypted = File.ReadAllText(FileNames.EncryptedFile, Encoding.Default);
 
                 List<string> decrypted = new List<string>();
                 for(int i = 1; i < _cipher.AlphabetSize; i++)
@@ -102,7 +102,7 @@ namespace AffineCipher
                     output.AppendLine(s);
                 }
 
-                File.WriteAllText(FileNames.ExtraFile, output.ToString());
+                File.WriteAllText(FileNames.ExtraFile, output.ToString(), Encoding.Default);
             }
             catch (Exception e)
             {
