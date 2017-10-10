@@ -50,6 +50,16 @@ namespace AffineCipher.Ciphers
         {
             throw new System.NotImplementedException();
         }
+        
+        private void VerifyKey(Key key)
+        {
+            if (!Modulo.RelativelyPrime(key.Multiplier, AlphabetSize))
+            {
+                var message = string.Format("Key multiplier ({0}) is not relatively prime to alphabet length ({1})",
+                    key.Multiplier, AlphabetSize);
+                throw new Exception(message);
+            }
+        }
 
         private char EncryptCharacter(int current, int offset, Key key)
         {
@@ -64,16 +74,6 @@ namespace AffineCipher.Ciphers
             }
 
             return (char) (((current - offset - key.Addend) * inversion) % AlphabetSize + offset);
-        }
-
-        private void VerifyKey(Key key)
-        {
-            if (!Modulo.RelativelyPrime(key.Multiplier, AlphabetSize))
-            {
-                var message = string.Format("Key multiplier ({0}) is not relatively prime to alphabet length ({1})",
-                    key.Multiplier, AlphabetSize);
-                throw new Exception(message);
-            }
         }
     }
 }
