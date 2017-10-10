@@ -49,6 +49,7 @@
     <Compile Include="OperationHandler.cs" />
     <Compile Include="ModularInverter.cs" />
     <Compile Include="FileNames.cs" />
+    <Compile Include="OperationResult.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
