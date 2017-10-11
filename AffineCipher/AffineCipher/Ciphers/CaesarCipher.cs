@@ -9,12 +9,12 @@ namespace AffineCipher.Ciphers
             var chars = input.ToCharArray();
             for(int i = 0; i < chars.Length; i++)
             {
-                if (chars[i] >= 'a' && chars[i] <= 'z')
+                if (IsLowercaseLetter(chars[i]))
                 {
                     chars[i] = EncryptCharacter(chars[i], 'a' - 1, key);
                 }
 
-                if (chars[i] >= 'A' && chars[i] <= 'Z')
+                if (IsUppercaseLetter(chars[i]))
                 {
                     chars[i] = EncryptCharacter(chars[i], 'A' - 1, key);
                 }
@@ -28,12 +28,12 @@ namespace AffineCipher.Ciphers
             var chars = input.ToCharArray();
             for (int i = 0; i < chars.Length; i++)
             {
-                if (chars[i] >= 'a' && chars[i] <= 'z')
+                if (IsLowercaseLetter(chars[i]))
                 {
                     chars[i] = DecryptCharacter(chars[i], 'a' - 1, key);
                 }
 
-                if (chars[i] >= 'A' && chars[i] <= 'Z')
+                if (IsUppercaseLetter(chars[i]))
                 {
                     chars[i] = DecryptCharacter(chars[i], 'A' - 1, key);
                 }
@@ -52,7 +52,7 @@ namespace AffineCipher.Ciphers
             try
             {
                 // loop until a letter is found
-                while (!((plainChars[i] >= 'a' && plainChars[i] <= 'z') || (plainChars[i] >= 'A' && plainChars[i] <= 'Z')))
+                while (!(IsLowercaseLetter(plainChars[i]) || IsUppercaseLetter(plainChars[i])))
                 {
                     i++;
                 }
