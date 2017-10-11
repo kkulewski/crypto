@@ -66,13 +66,13 @@ namespace AffineCipher.Ciphers
                 throw new Exception("Key cannot be found.");
             }
 
-            var x1 = plainChars[i] - 'a' + 1;
+            var x1 = plainChars[i] - 'a';
             // y1 = a*x1 + b
-            var y1 = encryptedChars[i] - 'a' + 1;
+            var y1 = encryptedChars[i] - 'a';
             
-            var x2 = plainChars[i + 1] - 'a' + 1;
+            var x2 = plainChars[i + 1] - 'a';
             // y2 = a*x2 + b
-            var y2 = encryptedChars[i + 1] - 'a' + 1;
+            var y2 = encryptedChars[i + 1] - 'a';
 
             var left = (x1 - x2 + AlphabetSize) % AlphabetSize;
 
