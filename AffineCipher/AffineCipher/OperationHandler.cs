@@ -103,7 +103,7 @@ namespace AffineCipher
                     output.AppendLine(s);
                 }
 
-                File.WriteAllText(FileNames.ExtraFile, output.ToString(), Encoding.Default);
+                File.WriteAllText(FileNames.SourceFile, output.ToString(), Encoding.Default);
             }
             catch (Exception e)
             {
