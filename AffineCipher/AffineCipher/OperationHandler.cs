@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using AffineCipher.Ciphers;
 
@@ -88,12 +89,12 @@ namespace AffineCipher
             try
             {
                 var encrypted = File.ReadAllText(FileNames.EncryptedFile, Encoding.Default);
+                var decrypted = new List<string>();
 
-                List<string> decrypted = new List<string>();
-                for(int i = 1; i < _cipher.AlphabetSize; i++)
+                var keys = _cipher.GetPossileKeys();
+                foreach (var k in keys)
                 {
-                    // TODO: multiplier has to be taken care of
-                    decrypted.Add(_cipher.Decrypt(encrypted, new Key(1, i)));
+                    decrypted.Add(_cipher.Decrypt(encrypted, k));
                 }
 
                 StringBuilder output = new StringBuilder();
