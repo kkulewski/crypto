@@ -84,7 +84,7 @@ namespace AffineCipher.Ciphers
 
             if (!Modulo.GetInversion(left, AlphabetSize, out int multiplierInversion))
             {
-                throw new Exception("Character inversion does not exist");
+                throw new Exception("Key cannot be found - character inversion does not exist");
             }
 
             // ensure mod operations are performed on positive numbers
