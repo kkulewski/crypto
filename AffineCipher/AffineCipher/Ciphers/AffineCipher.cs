@@ -2,7 +2,7 @@
 
 namespace AffineCipher.Ciphers
 {
-    class AffineCipher : Cipher
+    public class AffineCipher : Cipher
     {
         public override string Encrypt(string input, Key key)
         {
@@ -48,7 +48,45 @@ namespace AffineCipher.Ciphers
 
         public override Key RunCryptoanalysisWithPlain(string plain, string encrypted)
         {
-            throw new System.NotImplementedException();
+            var plainChars = plain.ToCharArray();
+            var encryptedChars = encrypted.ToCharArray();
+
+            int i = 0;
+
+            try
+            {
+                // loop until a letter is found
+                while (!((plainChars[i] >= 'a' && plainChars[i] <= 'z') || (plainChars[i] >= 'A' && plainChars[i] <= 'Z')))
+                {
+                    i++;
+                }
+            }
+            catch (Exception)
+            {
+                throw new Exception("Key cannot be found.");
+            }
+
+            var x1 = plainChars[i] - 'a' + 1;
+            // y1 = a*x1 + b
+            var y1 = encryptedChars[i] - 'a' + 1;
+            
+            var x2 = plainChars[i + 1] - 'a' + 1;
+            // y2 = a*x2 + b
+            var y2 = encryptedChars[i + 1] - 'a' + 1;
+
+            var left = (x1 - x2 + AlphabetSize) % AlphabetSize;
+
+            if (!Modulo.GetInversion(left, AlphabetSize, out int multiplierInversion))
+            {
+                throw new Exception("Character inversion does not exist");
+            }
+
+            var a = ((y1 - y2) * multiplierInversion + 10 * AlphabetSize) % AlphabetSize;
+
+            var axX1 = (a * x1 + AlphabetSize) % AlphabetSize;
+            var b = (y1 - axX1 + 10*AlphabetSize) % AlphabetSize;
+
+            return new Key(a, b);
         }
         
         private void VerifyKey(Key key)
