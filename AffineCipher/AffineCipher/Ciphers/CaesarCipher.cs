@@ -11,12 +11,12 @@ namespace AffineCipher.Ciphers
             {
                 if (IsLowercaseLetter(chars[i]))
                 {
-                    chars[i] = EncryptCharacter(chars[i], 'a' - 1, key);
+                    chars[i] = EncryptCharacter(chars[i], 'a', key);
                 }
 
                 if (IsUppercaseLetter(chars[i]))
                 {
-                    chars[i] = EncryptCharacter(chars[i], 'A' - 1, key);
+                    chars[i] = EncryptCharacter(chars[i], 'A', key);
                 }
             }
 
@@ -30,12 +30,12 @@ namespace AffineCipher.Ciphers
             {
                 if (IsLowercaseLetter(chars[i]))
                 {
-                    chars[i] = DecryptCharacter(chars[i], 'a' - 1, key);
+                    chars[i] = DecryptCharacter(chars[i], 'a', key);
                 }
 
                 if (IsUppercaseLetter(chars[i]))
                 {
-                    chars[i] = DecryptCharacter(chars[i], 'A' - 1, key);
+                    chars[i] = DecryptCharacter(chars[i], 'A', key);
                 }
             }
 
