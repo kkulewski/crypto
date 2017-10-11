@@ -13,12 +13,12 @@ namespace AffineCipher.Ciphers
             {
                 if (chars[i] >= 'a' && chars[i] <= 'z')
                 {
-                    chars[i] = EncryptCharacter(chars[i], 'a' - 1, key);
+                    chars[i] = EncryptCharacter(chars[i], 'a', key);
                 }
 
                 if (chars[i] >= 'A' && chars[i] <= 'Z')
                 {
-                    chars[i] = EncryptCharacter(chars[i], 'A' - 1, key);
+                    chars[i] = EncryptCharacter(chars[i], 'A', key);
                 }
             }
 
@@ -34,12 +34,12 @@ namespace AffineCipher.Ciphers
             {
                 if (chars[i] >= 'a' && chars[i] <= 'z')
                 {
-                    chars[i] = DecryptCharacter(chars[i], 'a' - 1, key);
+                    chars[i] = DecryptCharacter(chars[i], 'a', key);
                 }
 
                 if (chars[i] >= 'A' && chars[i] <= 'Z')
                 {
-                    chars[i] = DecryptCharacter(chars[i], 'A' - 1, key);
+                    chars[i] = DecryptCharacter(chars[i], 'A', key);
                 }
             }
 
@@ -101,7 +101,8 @@ namespace AffineCipher.Ciphers
 
         private char EncryptCharacter(int current, int offset, Key key)
         {
-            return (char)(((current - offset) * key.Multiplier + key.Addend) % AlphabetSize + offset);
+            var relative = (current - offset) * key.Multiplier + key.Addend + AlphabetSize;
+            return (char)(relative % AlphabetSize + offset);
         }
 
         private char DecryptCharacter(int current, int offset, Key key)
@@ -111,7 +112,8 @@ namespace AffineCipher.Ciphers
                 throw new Exception("Character inversion does not exist.");
             }
 
-            return (char) (((current - offset - key.Addend) * inversion) % AlphabetSize + offset);
+            var relative = (current - offset - key.Addend + AlphabetSize) * inversion;
+            return (char) (relative % AlphabetSize + offset);
         }
     }
 }
