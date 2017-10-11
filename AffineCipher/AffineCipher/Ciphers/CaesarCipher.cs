@@ -71,7 +71,7 @@ namespace AffineCipher.Ciphers
         public override IEnumerable<Key> GetPossileKeys()
         {
             var keys = new List<Key>();
-            for (int i = 0; i < AlphabetSize; i++)
+            for (int i = 1; i < AlphabetSize; i++)
             {
                 keys.Add(new Key(1, i));
             }
