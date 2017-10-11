@@ -57,7 +57,7 @@ namespace AffineCipher.Ciphers
             {
                 // TODO: fix capital letters
                 // loop until a letter is found
-                while (!((plainChars[i] >= 'a' && plainChars[i] <= 'z') || (plainChars[i] >= 'A' && plainChars[i] <= 'Z')))
+                while (!(IsLowercaseLetter(plainChars[i]) || IsUppercaseLetter(plainChars[i])))
                 {
                     i++;
                 }
@@ -115,6 +115,16 @@ namespace AffineCipher.Ciphers
 
             var relative = (current - offset - key.Addend + AlphabetSize) * inversion;
             return (char) (relative % AlphabetSize + offset);
+        }
+
+        private bool IsLowercaseLetter(char c)
+        {
+            return c >= 'a' && c <= 'z';
+        }
+
+        private bool IsUppercaseLetter(char c)
+        {
+            return c >= 'A' && c <= 'Z';
         }
     }
 }
