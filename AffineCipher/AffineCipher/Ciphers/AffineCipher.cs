@@ -55,6 +55,7 @@ namespace AffineCipher.Ciphers
 
             try
             {
+                // TODO: fix capital letters
                 // loop until a letter is found
                 while (!((plainChars[i] >= 'a' && plainChars[i] <= 'z') || (plainChars[i] >= 'A' && plainChars[i] <= 'Z')))
                 {
@@ -81,10 +82,10 @@ namespace AffineCipher.Ciphers
                 throw new Exception("Character inversion does not exist");
             }
 
-            var a = ((y1 - y2) * multiplierInversion + 10 * AlphabetSize) % AlphabetSize;
-
-            var axX1 = (a * x1 + AlphabetSize) % AlphabetSize;
-            var b = (y1 - axX1 + 10*AlphabetSize) % AlphabetSize;
+            // TODO: cleanup
+            var a = ((y1 - y2) * multiplierInversion + 1000 * AlphabetSize) % AlphabetSize;
+            var axX1 = (a * x1 + 1000*AlphabetSize) % AlphabetSize;
+            var b = (y1 - axX1 + 1000*AlphabetSize) % AlphabetSize;
 
             return new Key(a, b);
         }
