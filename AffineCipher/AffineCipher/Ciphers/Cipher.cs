@@ -9,5 +9,15 @@
         public abstract string Decrypt(string input, Key key);
 
         public abstract Key RunCryptoanalysisWithPlain(string plain, string encrypted);
+
+        protected bool IsLowercaseLetter(char c)
+        {
+            return c >= 'a' && c <= 'z';
+        }
+
+        protected bool IsUppercaseLetter(char c)
+        {
+            return c >= 'A' && c <= 'Z';
+        }
     }
 }
