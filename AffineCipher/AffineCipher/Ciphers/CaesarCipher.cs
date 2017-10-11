@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace AffineCipher.Ciphers
 {
@@ -65,6 +66,17 @@ namespace AffineCipher.Ciphers
             var keyAddend = (encryptedChars[i] - plainChars[i] + AlphabetSize) % AlphabetSize;
             var keyMultiplier = 1;
             return new Key(keyMultiplier, keyAddend);
+        }
+
+        public override IEnumerable<Key> GetPossileKeys()
+        {
+            var keys = new List<Key>();
+            for (int i = 0; i < AlphabetSize; i++)
+            {
+                keys.Add(new Key(1, i));
+            }
+
+            return keys;
         }
 
         private char EncryptCharacter(int current, int offset, Key key)
