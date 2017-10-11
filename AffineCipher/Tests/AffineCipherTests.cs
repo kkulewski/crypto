@@ -1,3 +1,4 @@
+﻿using System.Linq;
 using AffineCipher;
 using AffineCipher.Ciphers;
 using Xunit;
@@ -86,6 +87,12 @@ namespace Test
             Assert.Equal(input, decrypted);
             Assert.Equal(key.Multiplier, foundKey.Multiplier);
             Assert.Equal(key.Addend, foundKey.Addend);
+        }
+
+        [Fact]
+        public void GetPossibleKeysReturns312()
+        {
+            Assert.Equal(312, _cipher.GetPossileKeys().Count());
         }
     }
 }
