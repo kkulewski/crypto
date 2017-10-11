@@ -70,13 +70,15 @@ namespace AffineCipher.Ciphers
                 throw new Exception("Key cannot be found.");
             }
 
-            var x1 = plainChars[i] - 'a';
+            var offset = IsLowercaseLetter(plainChars[i]) ? 'a' : 'A';
+
+            var x1 = plainChars[i] - offset;
             // y1 = a*x1 + b
-            var y1 = encryptedChars[i] - 'a';
+            var y1 = encryptedChars[i] - offset;
             
-            var x2 = plainChars[i + 1] - 'a';
+            var x2 = plainChars[i + 1] - offset;
             // y2 = a*x2 + b
-            var y2 = encryptedChars[i + 1] - 'a';
+            var y2 = encryptedChars[i + 1] - offset;
 
             var left = (x1 - x2 + AlphabetSize) % AlphabetSize;
 
