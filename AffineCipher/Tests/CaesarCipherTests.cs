@@ -1,4 +1,5 @@
-﻿using AffineCipher;
+﻿using System.Linq;
+using AffineCipher;
 using AffineCipher.Ciphers;
 using Xunit;
 
@@ -66,6 +67,12 @@ namespace Test
             var output = _cipher.Encrypt(input, key);
 
             Assert.Equal(_cipher.RunCryptoanalysisWithPlain(input, output).Addend, key.Addend);
+        }
+
+        [Fact]
+        public void GetPossibleKeysReturns25()
+        {
+            Assert.Equal(25, _cipher.GetPossileKeys().Count());
         }
     }
 }
