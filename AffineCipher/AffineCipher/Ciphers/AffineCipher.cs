@@ -55,9 +55,12 @@ namespace AffineCipher.Ciphers
 
             try
             {
-                // TODO: fix capital letters
-                // loop until a letter is found
-                while (!(IsLowercaseLetter(plainChars[i]) || IsUppercaseLetter(plainChars[i])))
+                // loop until a pair found that is both upper or both lowercase, and letter i != i+1
+                while (!(IsLowercaseLetter(plainChars[i]) && IsLowercaseLetter(plainChars[i + 1]) &&
+                         plainChars[i] != plainChars[i + 1] 
+                         ||
+                         IsUppercaseLetter(plainChars[i]) && IsLowercaseLetter(plainChars[i + 1]) &&
+                         plainChars[i] != plainChars[i + 1]))
                 {
                     i++;
                 }
