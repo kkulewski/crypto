@@ -1,4 +1,6 @@
-﻿namespace AffineCipher.Ciphers
+﻿using System.Collections.Generic;
+
+namespace AffineCipher.Ciphers
 {
     public abstract class Cipher
     {
@@ -9,6 +11,8 @@
         public abstract string Decrypt(string input, Key key);
 
         public abstract Key RunCryptoanalysisWithPlain(string plain, string encrypted);
+
+        public abstract IEnumerable<Key> GetPossileKeys();
 
         protected bool IsLowercaseLetter(char c)
         {
