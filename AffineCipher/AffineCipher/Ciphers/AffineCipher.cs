@@ -87,10 +87,10 @@ namespace AffineCipher.Ciphers
                 throw new Exception("Character inversion does not exist");
             }
 
-            // TODO: cleanup
-            var a = ((y1 - y2) * multiplierInversion + 1000 * AlphabetSize) % AlphabetSize;
-            var axX1 = (a * x1 + 1000*AlphabetSize) % AlphabetSize;
-            var b = (y1 - axX1 + 1000*AlphabetSize) % AlphabetSize;
+            // ensure mod operations are performed on positive numbers
+            var bigNumber = 1000;
+            var a = ((y1 - y2) * multiplierInversion + bigNumber * AlphabetSize) % AlphabetSize;
+            var b = (y1 - ((a * x1 + bigNumber * AlphabetSize) % AlphabetSize) + bigNumber*AlphabetSize) % AlphabetSize;
 
             return new Key(a, b);
         }
