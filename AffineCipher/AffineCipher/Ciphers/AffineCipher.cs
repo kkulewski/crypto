@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace AffineCipher.Ciphers
 {
@@ -94,7 +95,24 @@ namespace AffineCipher.Ciphers
 
             return new Key(a, b);
         }
-        
+
+        public override IEnumerable<Key> GetPossileKeys()
+        {
+            var keys = new List<Key>();
+            for (int i = 0; i < AlphabetSize; i++)
+            {
+                if (Modulo.RelativelyPrime(i, AlphabetSize))
+                {
+                    for (int j = 0; j < AlphabetSize; j++)
+                    {
+                        keys.Add(new Key(i, j));
+                    }
+                }
+            }
+
+            return keys;
+        }
+
         private void VerifyKey(Key key)
         {
             if (!Modulo.RelativelyPrime(key.Multiplier, AlphabetSize))
