@@ -49,19 +49,15 @@ namespace AffineCipher.Ciphers
 
         public override Key RunCryptoanalysisWithPlain(string plain, string encrypted)
         {
-            var plainChars = plain.ToCharArray();
-            var encryptedChars = encrypted.ToCharArray();
+            var plainChars = plain.ToLower().ToCharArray();
+            var encryptedChars = encrypted.ToLower().ToCharArray();
 
             int i = 0;
 
             try
             {
                 // loop until a pair found that is both upper or both lowercase, and letter i != i+1
-                while (!(IsLowercaseLetter(plainChars[i]) && IsLowercaseLetter(plainChars[i + 1]) &&
-                         plainChars[i] != plainChars[i + 1] 
-                         ||
-                         IsUppercaseLetter(plainChars[i]) && IsLowercaseLetter(plainChars[i + 1]) &&
-                         plainChars[i] != plainChars[i + 1]))
+                while (!(IsALetter(plainChars[i]) && IsALetter(plainChars[i + 1]) && plainChars[i] != plainChars[i + 1]))
                 {
                     i++;
                 }
@@ -71,7 +67,7 @@ namespace AffineCipher.Ciphers
                 throw new Exception("Key cannot be found.");
             }
 
-            var offset = IsLowercaseLetter(plainChars[i]) ? 'a' : 'A';
+            var offset = 'a';
 
             var x1 = plainChars[i] - offset;
             // y1 = a*x1 + b
@@ -111,6 +107,11 @@ namespace AffineCipher.Ciphers
             }
 
             return keys;
+        }
+
+        private bool IsALetter(char c)
+        {
+            return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
         }
 
         private void VerifyKey(Key key)
