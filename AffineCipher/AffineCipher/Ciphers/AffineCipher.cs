@@ -49,45 +49,48 @@ namespace AffineCipher.Ciphers
 
         public override Key RunCryptoanalysisWithPlain(string plain, string encrypted)
         {
+            // to lowercase for easier comparison
             var plainChars = plain.ToLower().ToCharArray();
             var encryptedChars = encrypted.ToLower().ToCharArray();
 
-            int i = 0;
+            int i = -1;
+            int x1 = 0, x2, y1, y2;
+            var offset = 'a';
+            int coefficentInversion = 0;
 
             try
             {
-                // loop until a pair found that is both upper or both lowercase, and letter i != i+1
-                while (!(IsALetter(plainChars[i]) && IsALetter(plainChars[i + 1]) && plainChars[i] != plainChars[i + 1]))
+                bool found = false;
+                while (!found && i + 1 < plainChars.Length)
                 {
                     i++;
+                    // loop until a valid pair is found and letter i != i+1
+                    if (IsALetter(plainChars[i]) && IsALetter(plainChars[i + 1]) && plainChars[i] != plainChars[i + 1])
+                    {
+                        x1 = plainChars[i] - offset;
+                        x2 = plainChars[i + 1] - offset;
+
+                        var coefficent = (x1 - x2 + AlphabetSize) % AlphabetSize;
+                        // if inversion of given coefficent exists - break the loop
+                        found = Modulo.GetInversion(coefficent, AlphabetSize, out coefficentInversion);
+                    }
                 }
+
             }
             catch (Exception)
             {
                 throw new Exception("Key cannot be found.");
             }
 
-            var offset = 'a';
-
-            var x1 = plainChars[i] - offset;
-            // y1 = a*x1 + b
-            var y1 = encryptedChars[i] - offset;
-            
-            var x2 = plainChars[i + 1] - offset;
-            // y2 = a*x2 + b
-            var y2 = encryptedChars[i + 1] - offset;
-
-            var left = (x1 - x2 + AlphabetSize) % AlphabetSize;
-
-            if (!Modulo.GetInversion(left, AlphabetSize, out int multiplierInversion))
-            {
-                throw new Exception("Key cannot be found - character inversion does not exist");
-            }
+            // equations: y1 = a*x1 + b, y2 = a*x2 + b
+            y1 = encryptedChars[i] - offset;
+            y2 = encryptedChars[i + 1] - offset;
 
             // ensure mod operations are performed on positive numbers
-            var bigNumber = 1000;
-            var a = ((y1 - y2) * multiplierInversion + bigNumber * AlphabetSize) % AlphabetSize;
-            var b = (y1 - ((a * x1 + bigNumber * AlphabetSize) % AlphabetSize) + bigNumber*AlphabetSize) % AlphabetSize;
+            var alphabetSizeTimes1000 = AlphabetSize * 1000;
+            // solve modulo equation system
+            var a = ((y1 - y2) * coefficentInversion + alphabetSizeTimes1000) % AlphabetSize;
+            var b = (y1 - ((a * x1 + alphabetSizeTimes1000) % AlphabetSize) + alphabetSizeTimes1000) % AlphabetSize;
 
             return new Key(a, b);
         }
