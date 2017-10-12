@@ -96,7 +96,7 @@ namespace AffineCipher.Ciphers
             return new Key(a, b);
         }
 
-        public override IEnumerable<Key> GetPossileKeys()
+        public override IEnumerable<Key> GetPossibleKeys()
         {
             var keys = new List<Key>();
             for (int i = 0; i < AlphabetSize; i++)

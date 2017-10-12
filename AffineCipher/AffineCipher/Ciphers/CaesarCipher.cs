@@ -68,7 +68,7 @@ namespace AffineCipher.Ciphers
             return new Key(keyMultiplier, keyAddend);
         }
 
-        public override IEnumerable<Key> GetPossileKeys()
+        public override IEnumerable<Key> GetPossibleKeys()
         {
             var keys = new List<Key>();
             for (int i = 1; i < AlphabetSize; i++)

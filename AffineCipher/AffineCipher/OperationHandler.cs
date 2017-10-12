@@ -91,7 +91,7 @@ namespace AffineCipher
                 var encrypted = File.ReadAllText(FileNames.EncryptedFile, Encoding.Default);
                 var decrypted = new List<string>();
 
-                var keys = _cipher.GetPossileKeys();
+                var keys = _cipher.GetPossibleKeys();
                 foreach (var k in keys)
                 {
                     decrypted.Add(_cipher.Decrypt(encrypted, k));

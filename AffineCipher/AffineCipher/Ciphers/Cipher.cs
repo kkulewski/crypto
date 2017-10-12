@@ -12,7 +12,7 @@ namespace AffineCipher.Ciphers
 
         public abstract Key RunCryptoanalysisWithPlain(string plain, string encrypted);
 
-        public abstract IEnumerable<Key> GetPossileKeys();
+        public abstract IEnumerable<Key> GetPossibleKeys();
 
         protected bool IsLowercaseLetter(char c)
         {
