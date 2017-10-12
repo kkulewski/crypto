@@ -59,12 +59,12 @@ namespace AffineCipher.Ciphers
             var offset = 'a';
             int coefficentInversion = 0;
 
-            try
+            bool inversionFound = false;
+            while (!inversionFound && i + 1 < plainChars.Length)
             {
-                bool found = false;
-                while (!found && j < plainChars.Length)
+                i++;
+                while (!inversionFound && j + 1 < plainChars.Length)
                 {
-                    i++;
                     j++;
                     // loop until a valid pair is found and letter i != i+1
                     if (IsALetter(plainChars[i]) && IsALetter(plainChars[j]) && plainChars[i] != plainChars[j])
@@ -74,12 +74,17 @@ namespace AffineCipher.Ciphers
 
                         var coefficent = (x1 - x2 + AlphabetSize) % AlphabetSize;
                         // if inversion of given coefficent exists - break the loop
-                        found = Modulo.GetInversion(coefficent, AlphabetSize, out coefficentInversion);
+                        inversionFound = Modulo.GetInversion(coefficent, AlphabetSize, out coefficentInversion);
                     }
                 }
 
+                if (!inversionFound)
+                {
+                    j = 1;
+                }
             }
-            catch (Exception)
+
+            if (!inversionFound)
             {
                 throw new Exception("Key cannot be found.");
             }
