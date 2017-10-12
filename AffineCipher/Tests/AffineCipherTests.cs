@@ -92,7 +92,7 @@ namespace Test
         [Fact]
         public void GetPossibleKeysReturns312()
         {
-            Assert.Equal(312, _cipher.GetPossileKeys().Count());
+            Assert.Equal(312, _cipher.GetPossibleKeys().Count());
         }
     }
 }
