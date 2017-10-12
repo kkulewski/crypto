@@ -54,6 +54,7 @@ namespace AffineCipher.Ciphers
             var encryptedChars = encrypted.ToLower().ToCharArray();
 
             int i = -1;
+            int j = i + 1;
             int x1 = 0, x2, y1, y2;
             var offset = 'a';
             int coefficentInversion = 0;
@@ -61,14 +62,15 @@ namespace AffineCipher.Ciphers
             try
             {
                 bool found = false;
-                while (!found && i + 1 < plainChars.Length)
+                while (!found && j < plainChars.Length)
                 {
                     i++;
+                    j++;
                     // loop until a valid pair is found and letter i != i+1
-                    if (IsALetter(plainChars[i]) && IsALetter(plainChars[i + 1]) && plainChars[i] != plainChars[i + 1])
+                    if (IsALetter(plainChars[i]) && IsALetter(plainChars[j]) && plainChars[i] != plainChars[j])
                     {
                         x1 = plainChars[i] - offset;
-                        x2 = plainChars[i + 1] - offset;
+                        x2 = plainChars[j] - offset;
 
                         var coefficent = (x1 - x2 + AlphabetSize) % AlphabetSize;
                         // if inversion of given coefficent exists - break the loop
@@ -84,7 +86,7 @@ namespace AffineCipher.Ciphers
 
             // equations: y1 = a*x1 + b, y2 = a*x2 + b
             y1 = encryptedChars[i] - offset;
-            y2 = encryptedChars[i + 1] - offset;
+            y2 = encryptedChars[j] - offset;
 
             // ensure mod operations are performed on positive numbers
             var alphabetSizeTimes1000 = AlphabetSize * 1000;
