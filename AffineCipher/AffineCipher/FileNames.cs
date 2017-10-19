@@ -6,6 +6,8 @@
 
         public const string KeyFile = "key.txt";
 
+        public const string KeyCrackedFile = "key-new.txt";
+
         public const string EncryptedFile = "crypto.txt";
 
         public const string DecryptedFile = "decrypt.txt";

@@ -24,8 +24,8 @@ namespace AffineCipher
                 var keyInput = File.ReadAllText(FileNames.KeyFile, Encoding.Default);
 
                 string[] keySplitted = keyInput.Split(' ');
-                var multiplier = int.Parse(keySplitted[0]);
-                var addend = int.Parse(keySplitted[1]);
+                var multiplier = int.Parse(keySplitted[1]);
+                var addend = int.Parse(keySplitted[0]);
                 var key = new Key(multiplier, addend);
 
                 var encrypted = _cipher.Encrypt(input, key);
@@ -47,8 +47,8 @@ namespace AffineCipher
                 var keyInput = File.ReadAllText(FileNames.KeyFile, Encoding.Default);
 
                 string[] keySplitted = keyInput.Split(' ');
-                var multiplier = int.Parse(keySplitted[0]);
-                var addend = int.Parse(keySplitted[1]);
+                var multiplier = int.Parse(keySplitted[1]);
+                var addend = int.Parse(keySplitted[0]);
                 var key = new Key(multiplier, addend);
 
                 var decrypted = _cipher.Decrypt(input, key);
@@ -70,8 +70,8 @@ namespace AffineCipher
                 var encrypted = File.ReadAllText(FileNames.EncryptedFile, Encoding.Default);
 
                 var key = _cipher.RunCryptoanalysisWithPlain(plain, encrypted);
-                string keyString = string.Format("{0} {1}", key.Multiplier, key.Addend);
-                File.WriteAllText(FileNames.KeyFile, keyString, Encoding.Default);
+                string keyString = string.Format("{0} {1}", key.Addend, key.Multiplier);
+                File.WriteAllText(FileNames.KeyCrackedFile, keyString, Encoding.Default);
 
                 var decrypted = _cipher.Decrypt(encrypted, key);
                 File.WriteAllText(FileNames.DecryptedFile, decrypted, Encoding.Default);
