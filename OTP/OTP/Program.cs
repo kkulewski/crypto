@@ -43,7 +43,7 @@ namespace OTP
         {
             int lineLength = 16 - 1;
 
-            var input = File.ReadAllText(FileNames.OriginalText);
+            var input = File.ReadAllText(FileNames.OriginalText, Encoding.ASCII);
             input = input.ToLower().RemoveForbiddenCharacters();
 
             var preparedText = new StringBuilder();
@@ -54,7 +54,7 @@ namespace OTP
                 preparedText.AppendLine(line);
             }
 
-            File.WriteAllText(FileNames.PreparedText, preparedText.ToString());
+            File.WriteAllText(FileNames.PreparedText, preparedText.ToString(), Encoding.ASCII);
         }
 
         public static string RemoveForbiddenCharacters(this string input)
@@ -69,6 +69,20 @@ namespace OTP
             }
 
             return input;
+        }
+
+        public static byte[] GetKeyBytes()
+        {
+            const int alphabetStart = 'a';
+            var keyText = File.ReadAllText(FileNames.Key, Encoding.ASCII);
+            var keyBytes = Encoding.ASCII.GetBytes(keyText);
+
+            for(int i = 0; i < keyBytes.Length; i++)
+            {
+                keyBytes[i] = (byte)(keyBytes[i] - alphabetStart);
+            }
+
+            return keyBytes;
         }
     }
 }
