@@ -26,7 +26,7 @@ namespace OTP
                     break;
 
                 case "-e":
-                    //Encryp();
+                    Encrypt(GetKeyBytes());
                     break;
 
                 case "-k":
@@ -83,6 +83,45 @@ namespace OTP
             }
 
             return keyBytes;
+        }
+
+        public static void Encrypt(byte[] key)
+        {
+            int lineLength = 16 - 1;
+
+            var input = File.ReadAllText(FileNames.PreparedText, Encoding.ASCII);
+            var encrypted = new StringBuilder();
+
+            var inputBytes = Encoding.ASCII.GetBytes(input);
+            //for (int i = 0; i < inputBytes.Length; i++)
+            //{
+            //    inputBytes[i] -= (byte) 'a';
+            //}
+
+            var output = new byte[inputBytes.Length];
+            for (int i = 0; i < inputBytes.Length; i++)
+            {
+                if (inputBytes[i] != (byte)'\n' && inputBytes[i] != (byte)' ')
+                {
+                    output[i] = (byte) ((inputBytes[i] - 'a' + key[i % lineLength]) % 25 + 'a');
+                    //output[i] = output[i] > 'z' ? (byte)(output[i] - (byte) 25) : output[i];
+                }
+                else
+                {
+                    output[i] = inputBytes[i];
+                }
+            }
+
+            var contents = Encoding.ASCII.GetString(output);
+            File.WriteAllText(FileNames.EncryptedText, contents, Encoding.ASCII);
+
+            //for (int i = 0; i < inputBytes.Length; i++)
+            //{
+            //    //Console.WriteLine("{0} => {1}", inputBytes[i], output[i]);
+            //    Console.Write((char)output[i]);
+            //}
+
+            //Console.WriteLine("{0}", (int)'\n');
         }
     }
 }
