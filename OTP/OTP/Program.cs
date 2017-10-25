@@ -85,43 +85,37 @@ namespace OTP
             return keyBytes;
         }
 
-        public static void Encrypt(byte[] key)
+        public static void Encrypt(byte[] keyBytes)
         {
             int lineLength = 16 - 1;
 
-            var input = File.ReadAllText(FileNames.PreparedText, Encoding.ASCII);
-            var encrypted = new StringBuilder();
+            var inputText = File.ReadAllText(FileNames.PreparedText, Encoding.ASCII);
+            var inputBytes = Encoding.ASCII.GetBytes(inputText);
 
-            var inputBytes = Encoding.ASCII.GetBytes(input);
-            //for (int i = 0; i < inputBytes.Length; i++)
-            //{
-            //    inputBytes[i] -= (byte) 'a';
-            //}
-
-            var output = new byte[inputBytes.Length];
+            var outputBytes = new byte[inputBytes.Length];
             for (int i = 0; i < inputBytes.Length; i++)
             {
-                if (inputBytes[i] != (byte)'\n' && inputBytes[i] != (byte)' ')
+                if (inputBytes[i] != (byte)'\n')
                 {
-                    output[i] = (byte) ((inputBytes[i] - 'a' + key[i % lineLength]) % 25 + 'a');
-                    //output[i] = output[i] > 'z' ? (byte)(output[i] - (byte) 25) : output[i];
+                    outputBytes[i] = (byte) (inputBytes[i] ^ keyBytes[i % lineLength]);
                 }
                 else
                 {
-                    output[i] = inputBytes[i];
+                    outputBytes[i] = inputBytes[i];
                 }
             }
 
-            var contents = Encoding.ASCII.GetString(output);
-            File.WriteAllText(FileNames.EncryptedText, contents, Encoding.ASCII);
+            var outputText = Encoding.ASCII.GetString(outputBytes);
+            File.WriteAllText(FileNames.EncryptedText, outputText, Encoding.ASCII);
 
-            //for (int i = 0; i < inputBytes.Length; i++)
-            //{
-            //    //Console.WriteLine("{0} => {1}", inputBytes[i], output[i]);
-            //    Console.Write((char)output[i]);
-            //}
-
-            //Console.WriteLine("{0}", (int)'\n');
+            // debug
+            for (int i = 0; i < inputBytes.Length; i++)
+            {
+                Console.WriteLine("{0:X} => {1:X} => {2:X}",
+                    inputBytes[i],
+                    outputBytes[i],
+                    inputBytes[i] != '\n' ? outputBytes[i] ^ keyBytes[i % lineLength] : outputBytes[i]);
+            }
         }
     }
 }
