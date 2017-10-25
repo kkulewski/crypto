@@ -51,7 +51,7 @@ namespace OTP
             {
                 var line = input.Substring(0, lineLength);
                 input = input.Substring(lineLength, input.Length - lineLength);
-                preparedText.AppendLine(line);
+                preparedText.Append(line + '\n');
             }
 
             File.WriteAllText(FileNames.PreparedText, preparedText.ToString(), Encoding.ASCII);
@@ -73,16 +73,8 @@ namespace OTP
 
         public static byte[] GetKeyBytes()
         {
-            const int alphabetStart = 'a';
             var keyText = File.ReadAllText(FileNames.Key, Encoding.ASCII);
-            var keyBytes = Encoding.ASCII.GetBytes(keyText);
-
-            for(int i = 0; i < keyBytes.Length; i++)
-            {
-                keyBytes[i] = (byte)(keyBytes[i] - alphabetStart);
-            }
-
-            return keyBytes;
+            return Encoding.ASCII.GetBytes(keyText);
         }
 
         public static void Encrypt(byte[] keyBytes)
