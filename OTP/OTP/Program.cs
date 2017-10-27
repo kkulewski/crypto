@@ -22,15 +22,15 @@ namespace OTP
             switch (args[0])
             {
                 case "-p":
-                    PrepareText();
+                    PrepareText(FileNames.OriginalText, FileNames.PreparedText);
                     break;
 
                 case "-e":
-                    Encrypt(GetKeyBytes(), FileNames.PreparedText, FileNames.EncryptedText);
+                    Encrypt(GetKeyBytes(FileNames.Key), FileNames.PreparedText, FileNames.EncryptedText);
                     break;
 
                 case "-d":
-                    Encrypt(GetKeyBytes(), FileNames.EncryptedText, FileNames.DecryptedText);
+                    Encrypt(GetKeyBytes(FileNames.Key), FileNames.EncryptedText, FileNames.DecryptedText);
                     break;
 
                 case "-k":
@@ -43,11 +43,11 @@ namespace OTP
             }
         }
 
-        public static void PrepareText()
+        public static void PrepareText(string inputFileName, string outputFileName)
         {
             int lineLength = 16 - 1;
 
-            var input = File.ReadAllText(FileNames.OriginalText, Encoding.ASCII);
+            var input = File.ReadAllText(inputFileName, Encoding.ASCII);
             input = input.ToLower().RemoveForbiddenCharacters();
 
             var preparedText = new StringBuilder();
@@ -58,7 +58,7 @@ namespace OTP
                 preparedText.Append(line + '\n');
             }
 
-            File.WriteAllText(FileNames.PreparedText, preparedText.ToString(), Encoding.ASCII);
+            File.WriteAllText(outputFileName, preparedText.ToString(), Encoding.ASCII);
         }
 
         public static string RemoveForbiddenCharacters(this string input)
@@ -75,9 +75,9 @@ namespace OTP
             return input;
         }
 
-        public static byte[] GetKeyBytes()
+        public static byte[] GetKeyBytes(string inputFileName)
         {
-            var keyText = File.ReadAllText(FileNames.Key, Encoding.ASCII);
+            var keyText = File.ReadAllText(inputFileName, Encoding.ASCII);
             return Encoding.ASCII.GetBytes(keyText);
         }
 
