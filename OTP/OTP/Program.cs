@@ -29,6 +29,10 @@ namespace OTP
                     Encrypt(GetKeyBytes());
                     break;
 
+                case "-d":
+                    Decrypt(GetKeyBytes());
+                    break;
+
                 case "-k":
                     //Cryptoanalysis();
                     break;
@@ -103,10 +107,41 @@ namespace OTP
             // debug
             for (int i = 0; i < inputBytes.Length; i++)
             {
-                Console.WriteLine("{0:X} => {1:X} => {2:X}",
+                Console.WriteLine("{0:X} => {1:X}",
                     inputBytes[i],
-                    outputBytes[i],
-                    inputBytes[i] != '\n' ? outputBytes[i] ^ keyBytes[i % lineLength] : outputBytes[i]);
+                    outputBytes[i]);
+            }
+        }
+
+        public static void Decrypt(byte[] keyBytes)
+        {
+            int lineLength = 16 - 1;
+
+            var inputText = File.ReadAllText(FileNames.EncryptedText, Encoding.ASCII);
+            var inputBytes = Encoding.ASCII.GetBytes(inputText);
+
+            var outputBytes = new byte[inputBytes.Length];
+            for (int i = 0; i < inputBytes.Length; i++)
+            {
+                if (inputBytes[i] != (byte)'\n')
+                {
+                    outputBytes[i] = (byte)(inputBytes[i] ^ keyBytes[i % lineLength]);
+                }
+                else
+                {
+                    outputBytes[i] = inputBytes[i];
+                }
+            }
+
+            var outputText = Encoding.ASCII.GetString(outputBytes);
+            File.WriteAllText(FileNames.DecryptedText, outputText, Encoding.ASCII);
+
+            // debug
+            for (int i = 0; i < inputBytes.Length; i++)
+            {
+                Console.WriteLine("{0:X} => {1:X}",
+                    inputBytes[i],
+                    outputBytes[i]);
             }
         }
     }
