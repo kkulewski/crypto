@@ -103,14 +103,6 @@ namespace OTP
 
             var outputText = Encoding.ASCII.GetString(outputBytes);
             File.WriteAllText(FileNames.EncryptedText, outputText, Encoding.ASCII);
-
-            // debug
-            for (int i = 0; i < inputBytes.Length; i++)
-            {
-                Console.WriteLine("{0:X} => {1:X}",
-                    inputBytes[i],
-                    outputBytes[i]);
-            }
         }
 
         public static void Decrypt(byte[] keyBytes)
@@ -135,14 +127,6 @@ namespace OTP
 
             var outputText = Encoding.ASCII.GetString(outputBytes);
             File.WriteAllText(FileNames.DecryptedText, outputText, Encoding.ASCII);
-
-            // debug
-            for (int i = 0; i < inputBytes.Length; i++)
-            {
-                Console.WriteLine("{0:X} => {1:X}",
-                    inputBytes[i],
-                    outputBytes[i]);
-            }
         }
     }
 }
