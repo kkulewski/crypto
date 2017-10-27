@@ -26,11 +26,11 @@ namespace OTP
                     break;
 
                 case "-e":
-                    Encrypt(GetKeyBytes());
+                    Encrypt(GetKeyBytes(), FileNames.PreparedText, FileNames.EncryptedText);
                     break;
 
                 case "-d":
-                    Decrypt(GetKeyBytes());
+                    Encrypt(GetKeyBytes(), FileNames.EncryptedText, FileNames.DecryptedText);
                     break;
 
                 case "-k":
@@ -81,11 +81,11 @@ namespace OTP
             return Encoding.ASCII.GetBytes(keyText);
         }
 
-        public static void Encrypt(byte[] keyBytes)
+        public static void Encrypt(byte[] keyBytes, string inputFileName, string outputFileName)
         {
             int lineLength = 16;
 
-            var inputText = File.ReadAllText(FileNames.PreparedText, Encoding.ASCII);
+            var inputText = File.ReadAllText(inputFileName, Encoding.ASCII);
             var inputBytes = Encoding.ASCII.GetBytes(inputText);
 
             var outputBytes = new byte[inputBytes.Length];
@@ -102,31 +102,7 @@ namespace OTP
             }
 
             var outputText = Encoding.ASCII.GetString(outputBytes);
-            File.WriteAllText(FileNames.EncryptedText, outputText, Encoding.ASCII);
-        }
-
-        public static void Decrypt(byte[] keyBytes)
-        {
-            int lineLength = 16;
-
-            var inputText = File.ReadAllText(FileNames.EncryptedText, Encoding.ASCII);
-            var inputBytes = Encoding.ASCII.GetBytes(inputText);
-
-            var outputBytes = new byte[inputBytes.Length];
-            for (int i = 0; i < inputBytes.Length; i++)
-            {
-                if (i+1 % lineLength+1 == 0 && i+1 != 0)
-                {
-                    outputBytes[i] = (byte)'\n';
-                }
-                else
-                {
-                    outputBytes[i] = (byte)(inputBytes[i] ^ keyBytes[i % lineLength]);
-                }
-            }
-
-            var outputText = Encoding.ASCII.GetString(outputBytes);
-            File.WriteAllText(FileNames.DecryptedText, outputText, Encoding.ASCII);
+            File.WriteAllText(outputFileName, outputText, Encoding.ASCII);
         }
     }
 }
