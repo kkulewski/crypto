@@ -21,27 +21,35 @@ namespace OTP
                 return;
             }
 
-            switch (args[0])
+            try
             {
-                case "-p":
-                    PrepareText(FileNames.OriginalText, FileNames.PreparedText);
-                    break;
+                switch (args[0])
+                {
+                    case "-p":
+                        PrepareText(FileNames.OriginalText, FileNames.PreparedText);
+                        break;
 
-                case "-e":
-                    Encrypt(GetKeyBytes(FileNames.Key), FileNames.PreparedText, FileNames.EncryptedText);
-                    break;
+                    case "-e":
+                        Encrypt(GetKeyBytes(FileNames.Key), FileNames.PreparedText, FileNames.EncryptedText);
+                        break;
 
-                case "-d":
-                    Encrypt(GetKeyBytes(FileNames.Key), FileNames.EncryptedText, FileNames.DecryptedText);
-                    break;
+                    case "-d":
+                        Encrypt(GetKeyBytes(FileNames.Key), FileNames.EncryptedText, FileNames.DecryptedText);
+                        break;
 
-                case "-k":
-                    Cryptoanalysis(FileNames.EncryptedText, FileNames.DecryptedText, FileNames.CrackedKey);
-                    break;
+                    case "-k":
+                        Cryptoanalysis(FileNames.EncryptedText, FileNames.DecryptedText, FileNames.CrackedKey);
+                        break;
 
-                default:
-                    Console.WriteLine("Wrong action parameter!" + parameterHelp);
-                    break;
+                    default:
+                        Console.WriteLine("Wrong action parameter!" + parameterHelp);
+                        break;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return;
             }
         }
 
