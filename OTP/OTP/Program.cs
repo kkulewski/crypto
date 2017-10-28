@@ -9,9 +9,9 @@ namespace OTP
         static void Main(string[] args)
         {
             const string parameterHelp = " Try:" +
-                                           "\n-p -- prepare text" +
-                                           "\n-e -- encrypt text" +
-                                           "\n-k -- cryptoanalysis";
+                                         "\n-p -- prepare text" +
+                                         "\n-e -- encrypt text" +
+                                         "\n-k -- cryptoanalysis";
 
             if (args.Length != 1 || args[0] == null)
             {
@@ -34,7 +34,7 @@ namespace OTP
                     break;
 
                 case "-k":
-                    //Cryptoanalysis();
+                    Cryptoanalysis(FileNames.EncryptedText, FileNames.DecryptedText, FileNames.CrackedKey);
                     break;
 
                 default:
@@ -45,7 +45,7 @@ namespace OTP
 
         public static void PrepareText(string inputFileName, string outputFileName)
         {
-            int lineLength = 16 - 1;
+            int lineLength = 16;
 
             var input = File.ReadAllText(inputFileName, Encoding.ASCII);
             input = input.ToLower().RemoveForbiddenCharacters();
@@ -87,22 +87,91 @@ namespace OTP
 
             var inputText = File.ReadAllText(inputFileName, Encoding.ASCII);
             var inputBytes = Encoding.ASCII.GetBytes(inputText);
+            var inputLines = inputBytes.Length / (lineLength + 1);
 
             var outputBytes = new byte[inputBytes.Length];
-            for (int i = 0; i < inputBytes.Length; i++)
+
+            for (int i = 0; i < inputLines; i++)
             {
-                if (i + 1 % lineLength + 1 == 0 && i + 1 != 0)
+                for (int j = 0; j < lineLength; j++)
                 {
-                    outputBytes[i] = (byte) '\n';
+                    outputBytes[i * (lineLength + 1) + j] = (byte)(inputBytes[i * (lineLength + 1) + j] ^ keyBytes[j]);
                 }
-                else
-                {
-                    outputBytes[i] = (byte)(inputBytes[i] ^ keyBytes[i % lineLength]);
-                }
+
+                outputBytes[i * (lineLength + 1) + lineLength] = (byte)'\n';
             }
 
             var outputText = Encoding.ASCII.GetString(outputBytes);
             File.WriteAllText(outputFileName, outputText, Encoding.ASCII);
+        }
+
+        public static void Cryptoanalysis(string inputFileName, string outputFileName, string outputKeyFileName)
+        {
+            int lineLength = 16;
+            var inputText = File.ReadAllText(inputFileName, Encoding.ASCII);
+            var inputBytes = Encoding.ASCII.GetBytes(inputText);
+            var textLines = inputBytes.Length / (lineLength + 1);
+            var keyBytes = new byte[lineLength];
+
+            // ALGORITHM
+            // A = inputBytes[i], B = inputBytes[i+1], C = inputBytes[i+2]
+            // spaceMask = 0100_0000
+            // if A ^ B & spaceMask != 0 => either A is space or B is space
+            // so: if B ^ C & spaceMask == 0, then neither B nor C is space => A might be a space
+            // now, when we know that A is space => A ^ space == keyByte[i]
+            var spaceMask = Convert.ToByte("01000000", 2);
+
+
+            for (int i = 1; i < textLines; i++)
+            {
+                for (int j = 0; j < lineLength - 2; j++)
+                {
+                    // current line offset
+                    var cl = i * (lineLength + 1);
+
+                    // first, second and third character to compare (A, B, C)
+                    int a = j + 0, b = j + 1, c = j + 2;
+
+                    // abs = (A xor B) & spaceBit
+                    byte abs = (byte)((inputBytes[cl + a] ^ inputBytes[cl + b]) & spaceMask);
+                    byte acs = (byte)((inputBytes[cl + a] ^ inputBytes[cl + c]) & spaceMask);
+                    byte bcs = (byte)((inputBytes[cl + b] ^ inputBytes[cl + c]) & spaceMask);
+
+                    // either A or B is space
+                    if (abs != 0)
+                    {
+                        if (acs != 0 && bcs == 0) // A+C contains space, B+C does not contain space => A is space
+                            keyBytes[a] = (byte)(inputBytes[cl + a] ^ (byte)' ');
+                        else if (acs == 0 && bcs != 0) // A+C does not contain space, B+C contains space => B is space
+                            keyBytes[b] = (byte)(inputBytes[cl + b] ^ (byte)' ');
+                    }
+
+                    if (acs != 0)
+                    {
+                        if (abs != 0 && bcs == 0)
+                            keyBytes[a] = (byte)(inputBytes[cl + a] ^ (byte)' ');
+                        else if (abs == 0 && bcs != 0)
+                            keyBytes[c] = (byte)(inputBytes[cl + c] ^ (byte)' ');
+                    }
+
+                    if (bcs != 0)
+                    {
+                        if (abs != 0 && acs == 0)
+                            keyBytes[b] = (byte)(inputBytes[cl + b] ^ (byte)' ');
+                        else if (abs == 0 && acs != 0)
+                            keyBytes[c] = (byte)(inputBytes[cl + c] ^ (byte)' ');
+                    }
+                }
+            }
+
+            var key = new StringBuilder();
+            for (int i = 0; i < lineLength; i++)
+            {
+                key.Append((char)keyBytes[i]);
+            }
+
+            File.WriteAllText(outputKeyFileName, key.ToString(), Encoding.ASCII);
+            Encrypt(keyBytes, inputFileName, outputFileName);
         }
     }
 }

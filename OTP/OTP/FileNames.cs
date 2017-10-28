@@ -12,5 +12,6 @@
 
         public const string DecryptedText = "decrypt.txt";
 
+        public const string CrackedKey = "cracked-key.txt";
     }
 }
