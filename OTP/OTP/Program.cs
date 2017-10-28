@@ -6,6 +6,8 @@ namespace OTP
 {
     static class Program
     {
+        public static int LineLength = 16;
+
         static void Main(string[] args)
         {
             const string parameterHelp = " Try:" +
@@ -45,16 +47,14 @@ namespace OTP
 
         public static void PrepareText(string inputFileName, string outputFileName)
         {
-            int lineLength = 16;
-
             var input = File.ReadAllText(inputFileName, Encoding.ASCII);
             input = input.ToLower().RemoveForbiddenCharacters();
 
             var preparedText = new StringBuilder();
-            while (input.Length > lineLength)
+            while (input.Length > LineLength)
             {
-                var line = input.Substring(0, lineLength);
-                input = input.Substring(lineLength, input.Length - lineLength);
+                var line = input.Substring(0, LineLength);
+                input = input.Substring(LineLength, input.Length - LineLength);
                 preparedText.Append(line + '\n');
             }
 
@@ -83,22 +83,20 @@ namespace OTP
 
         public static void Encrypt(byte[] keyBytes, string inputFileName, string outputFileName)
         {
-            int lineLength = 16;
-
             var inputText = File.ReadAllText(inputFileName, Encoding.ASCII);
             var inputBytes = Encoding.ASCII.GetBytes(inputText);
-            var inputLines = inputBytes.Length / (lineLength + 1);
+            var inputLines = inputBytes.Length / (LineLength + 1);
 
             var outputBytes = new byte[inputBytes.Length];
 
             for (int i = 0; i < inputLines; i++)
             {
-                for (int j = 0; j < lineLength; j++)
+                for (int j = 0; j < LineLength; j++)
                 {
-                    outputBytes[i * (lineLength + 1) + j] = (byte)(inputBytes[i * (lineLength + 1) + j] ^ keyBytes[j]);
+                    outputBytes[i * (LineLength + 1) + j] = (byte)(inputBytes[i * (LineLength + 1) + j] ^ keyBytes[j]);
                 }
 
-                outputBytes[i * (lineLength + 1) + lineLength] = (byte)'\n';
+                outputBytes[i * (LineLength + 1) + LineLength] = (byte)'\n';
             }
 
             var outputText = Encoding.ASCII.GetString(outputBytes);
@@ -107,11 +105,10 @@ namespace OTP
 
         public static void Cryptoanalysis(string inputFileName, string outputFileName, string outputKeyFileName)
         {
-            int lineLength = 16;
             var inputText = File.ReadAllText(inputFileName, Encoding.ASCII);
             var inputBytes = Encoding.ASCII.GetBytes(inputText);
-            var textLines = inputBytes.Length / (lineLength + 1);
-            var keyBytes = new byte[lineLength];
+            var textLines = inputBytes.Length / (LineLength + 1);
+            var keyBytes = new byte[LineLength];
 
             // ALGORITHM
             // A = inputBytes[i], B = inputBytes[i+1], C = inputBytes[i+2]
@@ -124,10 +121,10 @@ namespace OTP
 
             for (int i = 1; i < textLines; i++)
             {
-                for (int j = 0; j < lineLength - 2; j++)
+                for (int j = 0; j < LineLength - 2; j++)
                 {
                     // current line offset
-                    var cl = i * (lineLength + 1);
+                    var cl = i * (LineLength + 1);
 
                     // first, second and third character to compare (A, B, C)
                     int a = j + 0, b = j + 1, c = j + 2;
@@ -165,7 +162,7 @@ namespace OTP
             }
 
             var key = new StringBuilder();
-            for (int i = 0; i < lineLength; i++)
+            for (int i = 0; i < LineLength; i++)
             {
                 key.Append((char)keyBytes[i]);
             }
