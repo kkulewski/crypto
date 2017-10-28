@@ -86,17 +86,19 @@ namespace OTP
             var inputText = File.ReadAllText(inputFileName, Encoding.ASCII);
             var inputBytes = Encoding.ASCII.GetBytes(inputText);
             var inputLines = inputBytes.Length / (LineLength + 1);
-
             var outputBytes = new byte[inputBytes.Length];
 
             for (int i = 0; i < inputLines; i++)
             {
+                // current line offset
+                var cl = i * (LineLength + 1);
+
                 for (int j = 0; j < LineLength; j++)
                 {
-                    outputBytes[i * (LineLength + 1) + j] = (byte)(inputBytes[i * (LineLength + 1) + j] ^ keyBytes[j]);
+                    outputBytes[cl + j] = (byte)(inputBytes[cl + j] ^ keyBytes[j]);
                 }
 
-                outputBytes[i * (LineLength + 1) + LineLength] = (byte)'\n';
+                outputBytes[cl + LineLength] = (byte)'\n';
             }
 
             var outputText = Encoding.ASCII.GetString(outputBytes);
