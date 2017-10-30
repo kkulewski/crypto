@@ -129,44 +129,46 @@ namespace OTP
             var spaceMask = Convert.ToByte("01000000", 2);
 
 
-            for (int i = 1; i < textLines; i++)
+            for (int i = 0; i < LineLength; i++)
             {
-                for (int j = 0; j < LineLength - 2; j++)
+                for (int j = 0; j < textLines - 2; j++)
                 {
                     // current line offset
-                    var cl = i * (LineLength + 1);
+                    var cla = (j + 0) * (LineLength + 1);
+                    var clb = (j + 1) * (LineLength + 1);
+                    var clc = (j + 2) * (LineLength + 1);
 
                     // first, second and third character to compare (A, B, C)
-                    int a = j + 0, b = j + 1, c = j + 2;
+                    // int a = j + 0, b = j + 1, c = j + 2;
 
                     // abs = (A xor B) & spaceBit
-                    byte abs = (byte)((inputBytes[cl + a] ^ inputBytes[cl + b]) & spaceMask);
-                    byte acs = (byte)((inputBytes[cl + a] ^ inputBytes[cl + c]) & spaceMask);
-                    byte bcs = (byte)((inputBytes[cl + b] ^ inputBytes[cl + c]) & spaceMask);
+                    byte abs = (byte)((inputBytes[cla + i] ^ inputBytes[clb + i]) & spaceMask);
+                    byte acs = (byte)((inputBytes[cla + i] ^ inputBytes[clc + i]) & spaceMask);
+                    byte bcs = (byte)((inputBytes[clb + i] ^ inputBytes[clc + i]) & spaceMask);
 
                     // either A or B is space
                     if (abs != 0)
                     {
                         if (acs != 0 && bcs == 0) // A+C contains space, B+C does not contain space => A is space
-                            keyBytes[a] = (byte)(inputBytes[cl + a] ^ (byte)' ');
+                            keyBytes[i] = (byte)(inputBytes[cla + i] ^ (byte)' ');
                         else if (acs == 0 && bcs != 0) // A+C does not contain space, B+C contains space => B is space
-                            keyBytes[b] = (byte)(inputBytes[cl + b] ^ (byte)' ');
+                            keyBytes[i] = (byte)(inputBytes[clb + i] ^ (byte)' ');
                     }
 
                     if (acs != 0)
                     {
                         if (abs != 0 && bcs == 0)
-                            keyBytes[a] = (byte)(inputBytes[cl + a] ^ (byte)' ');
+                            keyBytes[i] = (byte)(inputBytes[cla + i] ^ (byte)' ');
                         else if (abs == 0 && bcs != 0)
-                            keyBytes[c] = (byte)(inputBytes[cl + c] ^ (byte)' ');
+                            keyBytes[i] = (byte)(inputBytes[clc + i] ^ (byte)' ');
                     }
 
                     if (bcs != 0)
                     {
                         if (abs != 0 && acs == 0)
-                            keyBytes[b] = (byte)(inputBytes[cl + b] ^ (byte)' ');
+                            keyBytes[i] = (byte)(inputBytes[clb + i] ^ (byte)' ');
                         else if (abs == 0 && acs != 0)
-                            keyBytes[c] = (byte)(inputBytes[cl + c] ^ (byte)' ');
+                            keyBytes[i] = (byte)(inputBytes[clc + i] ^ (byte)' ');
                     }
                 }
             }
