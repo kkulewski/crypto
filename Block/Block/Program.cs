@@ -72,11 +72,11 @@ namespace Block
 
         public static void Flip16EncryptBlock(Bitmap image, bool[] key, int i, int j)
         {
-            var points = Get16Points(i, j);
-            foreach (var point in points)
+            var points = Get16Points(i, j).ToArray();
+            for (var k = 0; k < 16; k++)
             {
-                if (key[i % 16])
-                    FlipColor(point, image);
+                if(key[k])
+                    FlipColor(points[k], image);
             }
         }
 
