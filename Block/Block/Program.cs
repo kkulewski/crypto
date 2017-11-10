@@ -34,15 +34,16 @@ namespace Block
             return (Bitmap) Image.FromFile(fileName);
         }
 
-        public static bool IsPixelBlack(Point p, Bitmap img)
+        public static bool IsPixelBlack(Bitmap img, Point p)
         {
             var px = img.GetPixel(p.X, p.Y);
             return px.R == 0 && px.G == 0 && px.B == 0;
         }
 
-        public static void FlipColor(Point p, Bitmap img)
+        public static void FlipPixelColor(Bitmap img, Point p)
         {
-            img.SetPixel(p.X, p.Y, IsPixelBlack(p, img) ? Color.White : Color.Black);
+            var newColor = IsPixelBlack(img, p) ? Color.White : Color.Black;
+            img.SetPixel(p.X, p.Y, newColor);
         }
 
         public static Bitmap Flip16Encryption(Bitmap sourceImage, bool[] key)
@@ -66,7 +67,7 @@ namespace Block
             for (var k = 0; k < 16; k++)
             {
                 if(key[k])
-                    FlipColor(points[k], image);
+                    FlipPixelColor(image, points[k]);
             }
         }
 
