@@ -7,7 +7,6 @@ namespace Block
     public class ImageEncryption
     {
         public readonly int BlockWidth;
-
         public readonly int BlockHeight;
 
         public ImageEncryption(int blockWidth, int blockHeight)
@@ -21,16 +20,19 @@ namespace Block
             var blockSize = BlockWidth * BlockHeight;
             EcbEncryptBlock(image, key, 0, 0);
 
-            for (var x = 1; x < image.Width / BlockWidth; x++)
+            for (var x = 0; x < image.Width / BlockWidth; x++)
             {
-                for (var y = 1; y < image.Height / BlockHeight; y++)
+                for (var y = 0; y < image.Height / BlockHeight; y++)
                 {
-                    var previousBlockAsKey = GetBlockKey(image, x - 1, y - 1);
+                    if (x == 0 && y == 0)
+                        continue;
+
+                    var previousBlockAsKey = x == 0 ? GetBlockKey(image, BlockWidth - 1, y - 1) : GetBlockKey(image, x - 1, y);
                     var newKey = new bool[blockSize];
 
                     for (var i = 0; i < blockSize; i++)
                     {
-                        newKey[i] = previousBlockAsKey[i] ^ key[i];
+                        newKey[i] = previousBlockAsKey[(x * y + y) % (i + 1)] ^ key[(x * y + x) % (i + 1)];
                     }
 
                     EcbEncryptBlock(image, newKey, x, y);
