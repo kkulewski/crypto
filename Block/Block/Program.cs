@@ -51,38 +51,38 @@ namespace Block
 
         public static void EcbEncryptBlock(Bitmap image, bool[] key, int i, int j)
         {
-            var points = Get16Points(i, j).ToArray();
-            for (var k = 0; k < 16; k++)
+            var block = GetPixelBlock(i, j).ToArray();
+            for (var px = 0; px < 16; px++)
             {
-                if (key[k])
-                    FlipPixelColor(image, points[k]);
+                if (key[px])
+                    FlipPixelColor(image, block[px]);
             }
         }
 
-        public static bool IsPixelBlack(Bitmap img, Point p)
+        public static IEnumerable<Point> GetPixelBlock(int i, int j)
         {
-            var px = img.GetPixel(p.X, p.Y);
-            return px.R == 0 && px.G == 0 && px.B == 0;
-        }
-
-        public static void FlipPixelColor(Bitmap img, Point p)
-        {
-            var newColor = IsPixelBlack(img, p) ? Color.White : Color.Black;
-            img.SetPixel(p.X, p.Y, newColor);
-        }
-
-        public static IEnumerable<Point> Get16Points(int i, int j)
-        {
-            var points = new List<Point>();
+            var block = new List<Point>();
             for (var k = 0; k < 4; k++)
             {
                 for (var n = 0; n < 4; n++)
                 {
-                    points.Add(new Point(i * 4 + k, j * 4 + n));
+                    block.Add(new Point(i * 4 + k, j * 4 + n));
                 }
             }
 
-            return points;
+            return block;
+        }
+
+        public static void FlipPixelColor(Bitmap image, Point px)
+        {
+            var newColor = IsPixelBlack(image, px) ? Color.White : Color.Black;
+            image.SetPixel(px.X, px.Y, newColor);
+        }
+
+        public static bool IsPixelBlack(Bitmap image, Point p)
+        {
+            var px = image.GetPixel(p.X, p.Y);
+            return px.R == 0 && px.G == 0 && px.B == 0;
         }
     }
 }
