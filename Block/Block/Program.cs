@@ -14,12 +14,14 @@ namespace Block
         public const string PlainFileName = "plain.bmp";
         public const string KeyFileName = "key.txt";
         public const string EcbEncryptedFileName = "ecb_crypto.bmp";
+        public const string CbcEncryptedFileName = "cbc_crypto.bmp";
 
         static void Main(string[] args)
         {
             var img = LoadImage(PlainFileName);
             var key = LoadKey(KeyFileName);
             EcbEncrypt(img, key).Save(EcbEncryptedFileName);
+            CbcEncrypt(img, key).Save(CbcEncryptedFileName);
         }
 
         public static bool[] LoadKey(string fileName)
@@ -38,6 +40,31 @@ namespace Block
         public static Bitmap LoadImage(string fileName)
         {
             return (Bitmap) Image.FromFile(fileName);
+        }
+
+        public static Bitmap CbcEncrypt(Bitmap sourceImage, bool[] key)
+        {
+            var image = (Bitmap) sourceImage.Clone();
+            var blockSize = BlockWidth * BlockHeight;
+            EcbEncryptBlock(image, key, 0, 0);
+
+            for (var x = 1; x < image.Width / BlockWidth; x++)
+            {
+                for (var y = 1; y < image.Height / BlockHeight; y++)
+                {
+                    var previousBlockAsKey = GetBlockKey(image, x - 1, y - 1);
+                    var newKey = new bool[blockSize];
+
+                    for (var i = 0; i < blockSize; i++)
+                    {
+                        newKey[i] = previousBlockAsKey[i] ^ key[i];
+                    }
+
+                    EcbEncryptBlock(image, newKey, x, y);
+                }
+            }
+
+            return image;
         }
 
         public static Bitmap EcbEncrypt(Bitmap sourceImage, bool[] key)
