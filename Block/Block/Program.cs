@@ -8,12 +8,18 @@ namespace Block
 {
     class Program
     {
+        public const int BlockWidth = 4;
+        public const int BlockHeight = 4;
+
+        public const string PlainFileName = "plain.bmp";
+        public const string KeyFileName = "key.txt";
+        public const string EcbEncryptedFileName = "ecb_crypto.bmp";
+
         static void Main(string[] args)
         {
-            var img = LoadImage(args[0]);
-            var key = LoadKey(args[1]);
-            var newImg = EcbEncrypt(img, key);
-            newImg.Save(args[2]);
+            var img = LoadImage(PlainFileName);
+            var key = LoadKey(KeyFileName);
+            EcbEncrypt(img, key).Save(EcbEncryptedFileName);
         }
 
         public static bool[] LoadKey(string fileName)
@@ -38,35 +44,35 @@ namespace Block
         {
             var image = (Bitmap)sourceImage.Clone();
 
-            for (var i = 0; i < image.Width / 4; i++)
+            for (var x = 0; x < image.Width / BlockWidth; x++)
             {
-                for (var j = 0; j < image.Height / 4; j++)
+                for (var y = 0; y < image.Height / BlockHeight; y++)
                 {
-                    EcbEncryptBlock(image, key, i, j);
+                    EcbEncryptBlock(image, key, x, y);
                 }
             }
 
             return image;
         }
 
-        public static void EcbEncryptBlock(Bitmap image, bool[] key, int i, int j)
+        public static void EcbEncryptBlock(Bitmap image, bool[] key, int x, int y)
         {
-            var block = GetPixelBlock(i, j).ToArray();
-            for (var px = 0; px < 16; px++)
+            var block = GetPixelBlock(x, y).ToArray();
+            for (var px = 0; px < BlockWidth * BlockHeight; px++)
             {
                 if (key[px])
                     FlipPixelColor(image, block[px]);
             }
         }
 
-        public static IEnumerable<Point> GetPixelBlock(int i, int j)
+        public static IEnumerable<Point> GetPixelBlock(int x, int y)
         {
             var block = new List<Point>();
-            for (var k = 0; k < 4; k++)
+            for (var k = 0; k < BlockWidth; k++)
             {
-                for (var n = 0; n < 4; n++)
+                for (var n = 0; n < BlockHeight; n++)
                 {
-                    block.Add(new Point(i * 4 + k, j * 4 + n));
+                    block.Add(new Point(x * BlockWidth + k, y * BlockHeight + n));
                 }
             }
 
@@ -79,10 +85,10 @@ namespace Block
             image.SetPixel(px.X, px.Y, newColor);
         }
 
-        public static bool IsPixelBlack(Bitmap image, Point p)
+        public static bool IsPixelBlack(Bitmap image, Point px)
         {
-            var px = image.GetPixel(p.X, p.Y);
-            return px.R == 0 && px.G == 0 && px.B == 0;
+            var color = image.GetPixel(px.X, px.Y);
+            return color.R == 0 && color.G == 0 && color.B == 0;
         }
     }
 }
