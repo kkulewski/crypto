@@ -18,13 +18,12 @@ namespace Block
 
         public static bool[] LoadKey(string fileName)
         {
-            var content = File.ReadAllText(fileName);
-            var keyBits = content.ToCharArray();
-
+            var keyChars = File.ReadAllText(fileName).ToCharArray();
             var key = new List<bool>();
-            foreach (var b in keyBits)
+
+            foreach (var c in keyChars)
             {
-                key.Add(b == '1');
+                key.Add(c == '1');
             }
 
             return key.ToArray();
