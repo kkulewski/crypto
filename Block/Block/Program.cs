@@ -39,7 +39,7 @@ namespace Block
         {
             return (Bitmap) Image.FromFile(fileName);
         }
-        
+
         public static Bitmap EcbEncrypt(Bitmap sourceImage, bool[] key)
         {
             var image = (Bitmap)sourceImage.Clone();
@@ -63,6 +63,11 @@ namespace Block
                 if (key[px])
                     FlipPixelColor(image, block[px]);
             }
+        }
+
+        public static bool[] GetBlockKey(Bitmap image, int x, int y)
+        {
+            return GetPixelBlock(x, y).Select(px => IsPixelBlack(image, px)).ToArray();
         }
 
         public static IEnumerable<Point> GetPixelBlock(int x, int y)
