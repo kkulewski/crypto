@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 
 namespace Block
@@ -10,17 +11,32 @@ namespace Block
         static void Main(string[] args)
         {
             var img = LoadImage(args[0]);
+            var key = LoadKey(args[1]);
 
-            var key = new[]
-            {
-                true, true, false, false,
-                false, true, false, true,
-                true, false, true, false,
-                false, false, true, true
-            };
+            //var key = new[]
+            //{
+            //    true, true, false, false,
+            //    false, true, false, true,
+            //    true, false, true, false,
+            //    false, false, true, true
+            //};
 
             var newImg = Flip16Encryption(img, key);
-            newImg.Save(args[1]);
+            newImg.Save(args[2]);
+        }
+
+        public static bool[] LoadKey(string fileName)
+        {
+            var content = File.ReadAllText(fileName);
+            var keyBits = content.ToCharArray();
+
+            var key = new List<bool>();
+            foreach (var b in keyBits)
+            {
+                key.Add(b == '1');
+            }
+
+            return key.ToArray();
         }
 
         public static Bitmap LoadImage(string fileName)
