@@ -12,7 +12,7 @@ namespace Block
         {
             var img = LoadImage(args[0]);
             var key = LoadKey(args[1]);
-            var newImg = Flip16Encryption(img, key);
+            var newImg = EcbEncrypt(img, key);
             newImg.Save(args[2]);
         }
 
@@ -33,6 +33,31 @@ namespace Block
         {
             return (Bitmap) Image.FromFile(fileName);
         }
+        
+        public static Bitmap EcbEncrypt(Bitmap sourceImage, bool[] key)
+        {
+            var image = (Bitmap)sourceImage.Clone();
+
+            for (var i = 0; i < image.Width / 4; i++)
+            {
+                for (var j = 0; j < image.Height / 4; j++)
+                {
+                    EcbEncryptBlock(image, key, i, j);
+                }
+            }
+
+            return image;
+        }
+
+        public static void EcbEncryptBlock(Bitmap image, bool[] key, int i, int j)
+        {
+            var points = Get16Points(i, j).ToArray();
+            for (var k = 0; k < 16; k++)
+            {
+                if (key[k])
+                    FlipPixelColor(image, points[k]);
+            }
+        }
 
         public static bool IsPixelBlack(Bitmap img, Point p)
         {
@@ -44,31 +69,6 @@ namespace Block
         {
             var newColor = IsPixelBlack(img, p) ? Color.White : Color.Black;
             img.SetPixel(p.X, p.Y, newColor);
-        }
-
-        public static Bitmap Flip16Encryption(Bitmap sourceImage, bool[] key)
-        {
-            var image = (Bitmap)sourceImage.Clone();
-
-            for (var i = 0; i < image.Width / 4; i++)
-            {
-                for (var j = 0; j < image.Height / 4; j++)
-                {
-                    Flip16EncryptBlock(image, key, i, j);
-                }
-            }
-
-            return image;
-        }
-
-        public static void Flip16EncryptBlock(Bitmap image, bool[] key, int i, int j)
-        {
-            var points = Get16Points(i, j).ToArray();
-            for (var k = 0; k < 16; k++)
-            {
-                if(key[k])
-                    FlipPixelColor(image, points[k]);
-            }
         }
 
         public static IEnumerable<Point> Get16Points(int i, int j)
