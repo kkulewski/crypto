@@ -12,15 +12,6 @@ namespace Block
         {
             var img = LoadImage(args[0]);
             var key = LoadKey(args[1]);
-
-            //var key = new[]
-            //{
-            //    true, true, false, false,
-            //    false, true, false, true,
-            //    true, false, true, false,
-            //    false, false, true, true
-            //};
-
             var newImg = Flip16Encryption(img, key);
             newImg.Save(args[2]);
         }
