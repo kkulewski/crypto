@@ -16,9 +16,8 @@ namespace Block
             BlockHeight = blockHeight;
         }
 
-        public Bitmap CbcEncrypt(Bitmap sourceImage, bool[] key)
+        public Bitmap CbcEncrypt(Bitmap image, bool[] key)
         {
-            var image = (Bitmap) sourceImage.Clone();
             var blockSize = BlockWidth * BlockHeight;
             EcbEncryptBlock(image, key, 0, 0);
 
@@ -41,10 +40,8 @@ namespace Block
             return image;
         }
 
-        public Bitmap EcbEncrypt(Bitmap sourceImage, bool[] key)
+        public Bitmap EcbEncrypt(Bitmap image, bool[] key)
         {
-            var image = (Bitmap) sourceImage.Clone();
-
             for (var x = 0; x < image.Width / BlockWidth; x++)
             {
                 for (var y = 0; y < image.Height / BlockHeight; y++)
