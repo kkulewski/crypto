@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
+﻿using System.Drawing;
 using System.IO;
 using System.Linq;
 
@@ -24,20 +23,12 @@ namespace Block
             encryption.CbcEncrypt(img, key).Save(CbcEncryptedFileName);
         }
 
-        public static bool[] LoadKey(string fileName)
+        private static bool[] LoadKey(string fileName)
         {
-            var keyChars = File.ReadAllText(fileName).ToCharArray();
-            var key = new List<bool>();
-
-            foreach (var c in keyChars)
-            {
-                key.Add(c == '1');
-            }
-
-            return key.ToArray();
+            return File.ReadAllText(fileName).ToCharArray().Select(c => c == '1').ToArray();
         }
 
-        public static Bitmap LoadImage(string fileName)
+        private static Bitmap LoadImage(string fileName)
         {
             return (Bitmap) Image.FromFile(fileName);
         }
