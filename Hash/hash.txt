@@ -1,0 +1,29 @@
+cat hash.pdf personal.txt | md5sum 
+cat hash.pdf personal_.txt | md5sum
+8d4e5b9c7d964e93e812d52eb57255af
+f9b07c667736748b01246e774739c59e
+
+cat hash.pdf personal.txt | sha1sum
+cat hash.pdf personal_.txt | sha1sum
+fad8e4e4d7358ccd6cff9c9f7a3d1dd544a36377
+30174ad03529b0c9bfc40215c2d1e4b7b790413a
+
+cat hash.pdf personal.txt | sha224sum
+cat hash.pdf personal_.txt | sha224sum
+d05c778cb7d5395595a21f23b64970989a267d461aa8cfc33251664b
+dbd926dfe5298cfd970e5fdd2ff2f2c3babedfb134b7cf505d6b383b
+
+cat hash.pdf personal.txt | sha256sum
+cat hash.pdf personal_.txt | sha256sum
+fca745da4e3414c74a8576dd58eeb987f73579457e3b4c0cb51d525aa1909f2c
+f65b2e447f7ca5fd903e117db9a5894bfc6c43ee91d0471254e713961a386a9b
+
+cat hash.pdf personal.txt | sha384sum
+cat hash.pdf personal_.txt | sha384sum
+6a3c98b1c572f11a64d44c06bb5e839ad38e69cfa95b548f0dcb45d9280bf85a5aa4a224f0492d96dc56599341ee48a9
+ccd477f504c47dc529df4c4a74d5e2c55e35dd1ab5648feaa4ca7e84635aa58b22f97f551741250e3ff98c481f9fe21d
+
+cat hash.pdf personal.txt | sha512sum
+cat hash.pdf personal_.txt | sha512sum
+3f9738ca470df9fd3e7264bbf7c2aac392ba51b8cd491761556de50ab2068ffaf1c1e1e6291ecd8496ae5ac7f256c85b88fbfbc4bf826c71a20d5e635638521a
+0b90067b54641f4d66fb5a599c32e91be629a784aa48fa60490a701d949aa383143a8aace5b8843f77b1b627b2185418c61f71e2c692680301717aa5eb6480cc
