@@ -12,3 +12,11 @@ end
 def to_binary_string(line)
   line.chomp.chars.map { |c| hex_str_to_bin_str(c) }.join
 end
+
+def diff_bits(char_arr1, char_arr2)
+  different_bits = 0
+  for i in (0..char_arr1.length)
+    different_bits += 1 if char_arr1[i] != char_arr2[i]
+  end
+  different_bits
+end
