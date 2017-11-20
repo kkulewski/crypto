@@ -20,3 +20,14 @@ def diff_bits(char_arr1, char_arr2)
   end
   different_bits
 end
+
+def print_summary(i, lines)
+  puts lines[i + 0]
+  puts lines[i + 1]
+  puts lines[i + 2]
+  puts lines[i + 3]
+  diff = diff_bits(to_binary_string(lines[i + 2]), to_binary_string(lines[i + 3]))
+  bits = to_binary_string(lines[i + 2]).chars.length
+  perc = (diff / to_binary_string(lines[i + 2]).chars.length.to_f) * 100
+  puts "Different bits: #{diff} out of #{bits} (#{perc.round(2)}%)\n\n"
+end
