@@ -8,3 +8,7 @@ def hex_str_to_bin_str(hex_str)
     }
   hex2bin[hex_str]
 end
+
+def to_binary_string(line)
+  line.chomp.chars.map { |c| hex_str_to_bin_str(c) }.join
+end
