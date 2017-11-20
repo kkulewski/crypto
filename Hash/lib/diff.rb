@@ -31,3 +31,11 @@ def print_summary(i, lines)
   perc = (diff / to_binary_string(lines[i + 2]).chars.length.to_f) * 100
   puts "Different bits: #{diff} out of #{bits} (#{perc.round(2)}%)\n\n"
 end
+
+lines = File.readlines('hash.txt')
+print_summary(0, lines)
+print_summary(5, lines)
+print_summary(10, lines)
+print_summary(15, lines)
+print_summary(20, lines)
+print_summary(25, lines)
