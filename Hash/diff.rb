@@ -21,7 +21,8 @@ def diff_bits(char_arr1, char_arr2)
   different_bits
 end
 
-def print_summary(i, lines)
+def print_summary(i, file_name)
+  lines = File.readlines(file_name)
   puts lines[i + 0]
   puts lines[i + 1]
   puts lines[i + 2]
@@ -32,10 +33,10 @@ def print_summary(i, lines)
   puts "Different bits: #{diff} out of #{bits} (#{perc.round(2)}%)\n\n"
 end
 
-lines = File.readlines('hash.txt')
-print_summary(0, lines)
-print_summary(5, lines)
-print_summary(10, lines)
-print_summary(15, lines)
-print_summary(20, lines)
-print_summary(25, lines)
+# example
+print_summary(0, 'hash.txt')
+print_summary(5, 'hash.txt')
+print_summary(10, 'hash.txt')
+print_summary(15, 'hash.txt')
+print_summary(20, 'hash.txt')
+print_summary(25, 'hash.txt')
