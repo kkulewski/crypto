@@ -37,3 +37,13 @@
 - bitmap width = multiple of BlockWidth, height respectively
 - key length has to be greater or equal to block size (BlockWidth * BlockHeight)
 - default block size: 4x4 px, key = 16
+
+
+## 4. Hash functions
+#### Prerequisites
+- hash.txt - file with computed hash-pairs
+#### Usage
+- diff.rb > diff.txt
+#### Remarks
+- hash pair contains 2 function calls followed by 2 computed hashes (4 successive lines)
+- summary takes two args - entry line-start index and source file 
