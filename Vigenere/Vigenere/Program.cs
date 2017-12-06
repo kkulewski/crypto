@@ -9,6 +9,8 @@ namespace Vigenere
 {
     static class Program
     {
+        public static int AlphabetSize = 'z' - 'a' + 1;
+
         static void Main(string[] args)
         {
             const string parameterHelp = " Try:" +
@@ -32,7 +34,7 @@ namespace Vigenere
                         break;
 
                     case "-e":
-                        // encrypt
+                        Encrypt(FileNames.Key, FileNames.PreparedText, FileNames.EncryptedText);
                         break;
 
                     case "-d":
@@ -74,6 +76,32 @@ namespace Vigenere
             }
 
             return input.Replace(" ", string.Empty);
+        }
+
+        public static string GetKey(string inputFileName)
+        {
+            return File.ReadAllText(inputFileName, Encoding.ASCII);
+        }
+
+        public static void Encrypt(string keyFileName, string inputFileName, string outputFileName)
+        {
+            var keyText = File.ReadAllText(keyFileName, Encoding.ASCII);
+            var inputText = File.ReadAllText(inputFileName, Encoding.ASCII);
+
+            var keyChars = keyText.ToCharArray();
+            var inputChars = inputText.ToCharArray();
+            var outputChars = new char[inputChars.Length];
+
+            var offset = 'a';
+
+            for (var i = 0; i < inputText.Length; i++)
+            {
+                var currentKey = keyChars[i % keyChars.Length] - offset;
+                var currentCharIndex = inputChars[i] - offset;
+                outputChars[i] = (char)(((currentCharIndex + currentKey) % AlphabetSize) + offset);
+            }
+
+            File.WriteAllText(outputFileName, new string(outputChars), Encoding.ASCII);
         }
     }
 }
