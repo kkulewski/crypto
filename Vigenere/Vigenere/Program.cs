@@ -108,6 +108,8 @@ namespace Vigenere
 
         public static int GetKeyLength(string encryptedFileName)
         {
+            var cc = FindKey(10, "abc");
+
             var inputText = File.ReadAllText(encryptedFileName, Encoding.ASCII);
             var inputChars = inputText.ToCharArray();
             var occurrences = new int[inputChars.Length];
@@ -138,6 +140,48 @@ namespace Vigenere
             }
 
             return keyLength;
+        }
+
+        public static string FindKey(int keyLength, string input)
+        {
+            var englishFrequency = new[]
+            {
+                8.167, 1.492, 2.782, 4.253, 12.702, 2.228, 2.015, 6.094, 6.966, 0.153, 0.772, 4.025, 2.406,
+                6.749, 7.507, 1.929, 0.095, 5.987, 6.327, 9.056, 2.758, 0.978, 2.360, 0.150, 1.974, 0.974
+            };
+
+            //var prod = GetScalarProduct(englishFrequency, englishFrequency);
+
+            var product = 0.0;
+            var indexOffset = 0;
+            for (var i = 0; i < keyLength - 1; i++)
+            {
+                var inputOccurrences = new int[AlphabetSize];
+                for (var j = 0; j < input.Length; j++)
+                {
+                    var currentLetter = input[i % keyLength] - 'a';
+                    inputOccurrences[currentLetter]++;
+                }
+
+                var totalOccurrences = inputOccurrences.Sum();
+                
+                var inputFrequency = new double[AlphabetSize];
+                for (var j = 0; j < AlphabetSize; j++)
+                {
+                    inputFrequency[j] = (double) inputOccurrences[j] / totalOccurrences;
+                }
+
+                var newProduct = GetScalarProduct(inputFrequency, englishFrequency);
+                if (newProduct > product)
+                {
+                    indexOffset = i;
+                    product = newProduct;
+                }
+
+
+            }
+            var a = 5;
+            return "aaa";
         }
 
         public static double GetScalarProduct(double[] vector1, double[] vector2)
