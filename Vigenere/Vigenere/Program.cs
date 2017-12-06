@@ -78,11 +78,6 @@ namespace Vigenere
             return input.Replace(" ", string.Empty);
         }
 
-        public static string GetKey(string inputFileName)
-        {
-            return File.ReadAllText(inputFileName, Encoding.ASCII);
-        }
-
         public static void Encrypt(string keyFileName, string inputFileName, string outputFileName)
         {
             var keyText = File.ReadAllText(keyFileName, Encoding.ASCII);
