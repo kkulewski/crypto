@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Vigenere
 {
-    class Program
+    static class Program
     {
         static void Main(string[] args)
         {
@@ -27,7 +28,7 @@ namespace Vigenere
                 switch (args[0])
                 {
                     case "-p":
-                        // prepare text
+                        PrepareText(FileNames.OriginalText, FileNames.PreparedText);
                         break;
 
                     case "-e":
@@ -52,6 +53,27 @@ namespace Vigenere
                 Console.WriteLine(e.Message);
                 return;
             }
+        }
+
+        public static void PrepareText(string inputFileName, string outputFileName)
+        {
+            var input = File.ReadAllText(inputFileName, Encoding.ASCII);
+            var preparedText = input.ToLower().RemoveForbiddenCharacters();
+            File.WriteAllText(outputFileName, preparedText, Encoding.ASCII);
+        }
+
+        public static string RemoveForbiddenCharacters(this string input)
+        {
+            var forbiddenChars =
+                "~ ` ! @ # $ % ^ & * ( ) _ + 1 2 3 4 5 6 7 8 9 0 - = [ ] { } ; ' \" : , . < > / ? \\ | \n \r \t"
+                    .Split(' ');
+
+            foreach (var s in forbiddenChars)
+            {
+                input = input.Replace(s, "");
+            }
+
+            return input.Replace(" ", string.Empty);
         }
     }
 }
