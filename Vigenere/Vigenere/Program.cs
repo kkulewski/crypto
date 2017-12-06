@@ -38,7 +38,7 @@ namespace Vigenere
                         break;
 
                     case "-d":
-                        Decrypt(FileNames.Key, FileNames.EncryptedText, FileNames.DecryptedText);
+                        Encrypt(FileNames.Key, FileNames.EncryptedText, FileNames.DecryptedText, inverse: true);
                         break;
 
                     case "-k":
@@ -78,7 +78,7 @@ namespace Vigenere
             return input.Replace(" ", string.Empty);
         }
 
-        public static void Encrypt(string keyFileName, string inputFileName, string outputFileName)
+        public static void Encrypt(string keyFileName, string inputFileName, string outputFileName, bool inverse = false)
         {
             var keyText = File.ReadAllText(keyFileName, Encoding.ASCII);
             var inputText = File.ReadAllText(inputFileName, Encoding.ASCII);
@@ -87,34 +87,14 @@ namespace Vigenere
             var inputChars = inputText.ToCharArray();
             var outputChars = new char[inputChars.Length];
 
-            var offset = 'a';
+            const char offset = 'a';
+            var sign = inverse ? -1 : 1;
 
             for (var i = 0; i < inputText.Length; i++)
             {
-                var currentKey = keyChars[i % keyChars.Length] - offset;
+                var currentKey = (keyChars[i % keyChars.Length] - offset) * sign;
                 var currentCharIndex = inputChars[i] - offset;
-                outputChars[i] = (char)(((currentCharIndex + currentKey) % AlphabetSize) + offset);
-            }
-
-            File.WriteAllText(outputFileName, new string(outputChars), Encoding.ASCII);
-        }
-
-        public static void Decrypt(string keyFileName, string inputFileName, string outputFileName)
-        {
-            var keyText = File.ReadAllText(keyFileName, Encoding.ASCII);
-            var inputText = File.ReadAllText(inputFileName, Encoding.ASCII);
-
-            var keyChars = keyText.ToCharArray();
-            var inputChars = inputText.ToCharArray();
-            var outputChars = new char[inputChars.Length];
-
-            var offset = 'a';
-
-            for (var i = 0; i < inputText.Length; i++)
-            {
-                var currentKey = keyChars[i % keyChars.Length] - offset;
-                var currentCharIndex = inputChars[i] - offset;
-                outputChars[i] = (char)(((currentCharIndex - currentKey + AlphabetSize) % AlphabetSize) + offset);
+                outputChars[i] = (char)(((currentCharIndex + currentKey + AlphabetSize) % AlphabetSize) + offset);
             }
 
             File.WriteAllText(outputFileName, new string(outputChars), Encoding.ASCII);
