@@ -121,19 +121,19 @@ namespace Vigenere
                 }
             }
 
+            var descendingOccurrences = occurrences.OrderByDescending(x => x);
+            var percentile99Average = descendingOccurrences.Take(inputChars.Length / 100).Average();
+
             var keyLength = 0;
-            var avgOccurrences = (double) occurrences.Sum() / occurrences.Length;
             for (var i = 0; i < inputChars.Length; i++)
             {
-                if (occurrences[i] > avgOccurrences * 2.0)
+                if (occurrences[i] >= percentile99Average)
                 {
                     keyLength = i;
                     break;
                 }
             }
 
-            //var maxValue = occurrences.Max();
-            //var keyLength = Array.IndexOf(occurrences, maxValue);
             return keyLength;
         }
     }
