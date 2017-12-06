@@ -42,6 +42,7 @@ namespace Vigenere
                         break;
 
                     case "-k":
+                        Console.WriteLine(GetKeyLength(FileNames.EncryptedText));
                         // cryptoanalysis
                         break;
 
@@ -103,6 +104,37 @@ namespace Vigenere
             }
 
             return new string(outputChars);
+        }
+
+        public static int GetKeyLength(string encryptedFileName)
+        {
+            var inputText = File.ReadAllText(encryptedFileName, Encoding.ASCII);
+            var inputChars = inputText.ToCharArray();
+            var occurrences = new int[inputChars.Length];
+
+            for (var i = 1; i < inputChars.Length; i++)
+            {
+                for (var j = i; j < inputChars.Length; j++)
+                {
+                    if (inputChars[j - i] == inputChars[j])
+                        occurrences[i]++;
+                }
+            }
+
+            var keyLength = 0;
+            var avgOccurrences = (double) occurrences.Sum() / occurrences.Length;
+            for (var i = 0; i < inputChars.Length; i++)
+            {
+                if (occurrences[i] > avgOccurrences * 2.0)
+                {
+                    keyLength = i;
+                    break;
+                }
+            }
+
+            //var maxValue = occurrences.Max();
+            //var keyLength = Array.IndexOf(occurrences, maxValue);
+            return keyLength;
         }
     }
 }
