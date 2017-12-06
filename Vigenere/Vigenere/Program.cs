@@ -139,5 +139,16 @@ namespace Vigenere
 
             return keyLength;
         }
+
+        public static double GetScalarProduct(double[] vector1, double[] vector2)
+        {
+            var scalarProduct = 0.0;
+            for (var i = 0; i < vector1.Length; i++)
+            {
+                scalarProduct += vector1[i] * vector2[i];
+            }
+
+            return scalarProduct;
+        }
     }
 }
