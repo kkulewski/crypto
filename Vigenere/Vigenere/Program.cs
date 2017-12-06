@@ -38,7 +38,7 @@ namespace Vigenere
                         break;
 
                     case "-d":
-                        // decrypt
+                        Decrypt(FileNames.Key, FileNames.EncryptedText, FileNames.DecryptedText);
                         break;
 
                     case "-k":
@@ -99,6 +99,27 @@ namespace Vigenere
                 var currentKey = keyChars[i % keyChars.Length] - offset;
                 var currentCharIndex = inputChars[i] - offset;
                 outputChars[i] = (char)(((currentCharIndex + currentKey) % AlphabetSize) + offset);
+            }
+
+            File.WriteAllText(outputFileName, new string(outputChars), Encoding.ASCII);
+        }
+
+        public static void Decrypt(string keyFileName, string inputFileName, string outputFileName)
+        {
+            var keyText = File.ReadAllText(keyFileName, Encoding.ASCII);
+            var inputText = File.ReadAllText(inputFileName, Encoding.ASCII);
+
+            var keyChars = keyText.ToCharArray();
+            var inputChars = inputText.ToCharArray();
+            var outputChars = new char[inputChars.Length];
+
+            var offset = 'a';
+
+            for (var i = 0; i < inputText.Length; i++)
+            {
+                var currentKey = keyChars[i % keyChars.Length] - offset;
+                var currentCharIndex = inputChars[i] - offset;
+                outputChars[i] = (char)(((currentCharIndex - currentKey + AlphabetSize) % AlphabetSize) + offset);
             }
 
             File.WriteAllText(outputFileName, new string(outputChars), Encoding.ASCII);
