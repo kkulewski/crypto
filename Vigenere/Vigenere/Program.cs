@@ -122,12 +122,15 @@ namespace Vigenere
             }
 
             var descendingOccurrences = occurrences.OrderByDescending(x => x);
-            var percentile99Average = descendingOccurrences.Take(inputChars.Length / 100).Average();
+            var percentile98Average = descendingOccurrences.Take(inputChars.Length / 50).Average();
+
+            var top1 = descendingOccurrences.First();
+            var indexOfTop1 = Array.IndexOf(occurrences, top1);
 
             var keyLength = 0;
-            for (var i = 0; i < inputChars.Length; i++)
+            for (var i = 1; i < inputChars.Length; i++)
             {
-                if (occurrences[i] >= percentile99Average)
+                if (occurrences[i] >= percentile98Average && indexOfTop1 % i == 0)
                 {
                     keyLength = i;
                     break;
