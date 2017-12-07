@@ -47,3 +47,14 @@
 #### Remarks
 - hash pair contains 2 function calls followed by 2 computed hashes (4 successive lines)
 - summary takes two args - entry line-start index and source file 
+
+
+## 5. Vigenere
+#### Prerequisites
+- oring.txt - source text
+- key.txt - key
+#### Usage
+- Vigenere.exe -[p|e|d|k]
+- arg1: p (prepare text), e (encrypt), d (decrypt), k (brute force)
+#### Remarks
+- only english texts are valid because of defined letter frequencies
