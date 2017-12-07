@@ -11,6 +11,8 @@ namespace Vigenere
     {
         public static int AlphabetSize = 'z' - 'a' + 1;
 
+        private const char FirstLetterOffset = 'a';
+
         static void Main(string[] args)
         {
             const string parameterHelp = " Try:" +
@@ -43,7 +45,7 @@ namespace Vigenere
 
                     case "-k":
                         //Console.WriteLine(GetKeyLength(FileNames.EncryptedText));
-                        FindKey(GetKeyLength(FileNames.EncryptedText), FileNames.EncryptedText);
+                        Console.WriteLine(FindKey(GetKeyLength(FileNames.EncryptedText), FileNames.EncryptedText));
                         // cryptoanalysis
                         break;
 
@@ -93,15 +95,13 @@ namespace Vigenere
             var keyChars = key.ToCharArray();
             var inputChars = input.ToCharArray();
             var outputChars = new char[inputChars.Length];
-
-            const char offset = 'a';
             var sign = inverse ? -1 : 1;
 
             for (var i = 0; i < input.Length; i++)
             {
-                var currentKey = (keyChars[i % keyChars.Length] - offset) * sign;
-                var currentCharIndex = inputChars[i] - offset;
-                outputChars[i] = (char)(((currentCharIndex + currentKey + AlphabetSize) % AlphabetSize) + offset);
+                var currentKey = (keyChars[i % keyChars.Length] - FirstLetterOffset) * sign;
+                var currentCharIndex = inputChars[i] - FirstLetterOffset;
+                outputChars[i] = (char)(((currentCharIndex + currentKey + AlphabetSize) % AlphabetSize) + FirstLetterOffset);
             }
 
             return new string(outputChars);
@@ -162,9 +162,15 @@ namespace Vigenere
                 {
                     // count letter occurrences at index cipherLen % key
                     var letterOccurrences = new int[AlphabetSize];
-                    for (var j = 0; j < input.Length; j += keyLength)
+                    for (var j = 0; j < input.Length - keyLength; j += keyLength)
                     {
-                        var currentLetter = (input[j + i] - 'a' - k + AlphabetSize) % AlphabetSize;
+                        // skip last iteration (input.Length - keyLength) to
+                        // avoid i+j getting out of input array bounds
+
+                        // decrypt characters at position [i + j*keyLength] with key k
+                        // if key is correct - frequencies will match english alphabet
+                        // alphabet size is added to avoid modulo on negative numbers
+                        var currentLetter = (input[j + i] - FirstLetterOffset - k + AlphabetSize) % AlphabetSize;
                         letterOccurrences[currentLetter]++;
                     }
 
@@ -175,56 +181,18 @@ namespace Vigenere
                         letterFrequency[j] = ((double)letterOccurrences[j] / lettersSum) * 100;
                     }
 
+                    // get scalar product for each key k
                     scalarProducts[k] = GetScalarProduct(englishFrequency, letterFrequency);
                 }
 
-                var max = scalarProducts.OrderByDescending(x => x).First();
-                key[i] = (char)(Array.IndexOf(scalarProducts, max) + 'a');
+                // highest product indicates that letters decrypted with this key (array index)
+                // have similar frequency to english alphabet
+                var maxProduct = scalarProducts.OrderByDescending(x => x).First();
+                var correctKey = Array.IndexOf(scalarProducts, maxProduct);
+                key[i] = (char)(correctKey + FirstLetterOffset);
             }
 
-
-
-
-
-
-
-            var u = 3;
-
-
-
-
-
-
-            //var product = 0.0;
-            //var indexOffset = 0;
-            //for (var i = 0; i < keyLength - 1; i++)
-            //{
-            //    var inputOccurrences = new int[AlphabetSize];
-            //    for (var j = 0; j < input.Length; j++)
-            //    {
-            //        var currentLetter = input[i % keyLength] - 'a';
-            //        inputOccurrences[currentLetter]++;
-            //    }
-
-            //    var totalOccurrences = inputOccurrences.Sum();
-                
-            //    var inputFrequency = new double[AlphabetSize];
-            //    for (var j = 0; j < AlphabetSize; j++)
-            //    {
-            //        inputFrequency[j] = (double) inputOccurrences[j] / totalOccurrences;
-            //    }
-
-            //    var newProduct = GetScalarProduct(inputFrequency, englishFrequency);
-            //    if (newProduct > product)
-            //    {
-            //        indexOffset = i;
-            //        product = newProduct;
-            //    }
-
-
-            //}
-            var a = 5;
-            return "aaa";
+            return new string(key);
         }
 
         public static double GetScalarProduct(double[] vector1, double[] vector2)
