@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Vigenere
 {
     static class Program
     {
-        public static int AlphabetSize = 'z' - 'a' + 1;
+        private static int AlphabetSize = 'z' - 'a' + 1;
 
         private const char FirstLetterOffset = 'a';
 
@@ -44,9 +42,7 @@ namespace Vigenere
                         break;
 
                     case "-k":
-                        //Console.WriteLine(GetKeyLength(FileNames.EncryptedText));
-                        Console.WriteLine(FindKey(GetKeyLength(FileNames.EncryptedText), FileNames.EncryptedText));
-                        // cryptoanalysis
+                        Cryptoanalysis(FileNames.EncryptedText, FileNames.CrackedKey);
                         break;
 
                     default:
@@ -57,7 +53,6 @@ namespace Vigenere
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                return;
             }
         }
 
@@ -68,7 +63,7 @@ namespace Vigenere
             File.WriteAllText(outputFileName, preparedText, Encoding.ASCII);
         }
 
-        public static string RemoveForbiddenCharacters(this string input)
+        private static string RemoveForbiddenCharacters(this string input)
         {
             var forbiddenChars =
                 "~ ` ! @ # $ % ^ & * ( ) _ + 1 2 3 4 5 6 7 8 9 0 - = [ ] { } ; ' \" : , . < > / ? \\ | \n \r \t"
@@ -90,7 +85,7 @@ namespace Vigenere
             File.WriteAllText(outputFileName, encrypted, Encoding.ASCII);
         }
 
-        public static string Encrypt(string key, string input, bool inverse = false)
+        private static string Encrypt(string key, string input, bool inverse = false)
         {
             var keyChars = key.ToCharArray();
             var inputChars = input.ToCharArray();
@@ -107,12 +102,20 @@ namespace Vigenere
             return new string(outputChars);
         }
 
-        public static int GetKeyLength(string encryptedFileName)
+        public static void Cryptoanalysis(string encryptedFileName, string crackedKeyFileName)
         {
-            var inputText = File.ReadAllText(encryptedFileName, Encoding.ASCII);
-            var inputChars = inputText.ToCharArray();
+            var encryptedText = File.ReadAllText(encryptedFileName, Encoding.ASCII);
+            var keyLength = GetKeyLength(encryptedText);
+            var keyFound = FindKey(keyLength, encryptedText);
+            File.WriteAllText(crackedKeyFileName, keyFound, Encoding.ASCII);
+        }
+
+        private static int GetKeyLength(string encryptedText)
+        {
+            var inputChars = encryptedText.ToCharArray();
             var occurrences = new int[inputChars.Length];
 
+            // count matching characters in input with applied offsets
             for (var i = 1; i < inputChars.Length; i++)
             {
                 for (var j = i; j < inputChars.Length; j++)
@@ -124,13 +127,13 @@ namespace Vigenere
 
             var descendingOccurrences = occurrences.OrderByDescending(x => x);
             var percentile98Average = descendingOccurrences.Take(inputChars.Length / 50).Average();
-
             var top1 = descendingOccurrences.First();
             var indexOfTop1 = Array.IndexOf(occurrences, top1);
 
             var keyLength = 0;
             for (var i = 1; i < inputChars.Length; i++)
             {
+                // if length is both in 98 percentile and top1 is its multiply - possible key length found
                 if (occurrences[i] >= percentile98Average && indexOfTop1 % i == 0)
                 {
                     keyLength = i;
@@ -141,9 +144,8 @@ namespace Vigenere
             return keyLength;
         }
 
-        public static string FindKey(int keyLength, string encryptedFileName)
+        private static string FindKey(int keyLength, string encryptedText)
         {
-            var input = File.ReadAllText(encryptedFileName, Encoding.ASCII);
 
             var englishFrequency = new[]
             {
@@ -162,7 +164,7 @@ namespace Vigenere
                 {
                     // count letter occurrences at index cipherLen % key
                     var letterOccurrences = new int[AlphabetSize];
-                    for (var j = 0; j < input.Length - keyLength; j += keyLength)
+                    for (var j = 0; j < encryptedText.Length - keyLength; j += keyLength)
                     {
                         // skip last iteration (input.Length - keyLength) to
                         // avoid i+j getting out of input array bounds
@@ -170,7 +172,7 @@ namespace Vigenere
                         // decrypt characters at position [i + j*keyLength] with key k
                         // if key is correct - frequencies will match english alphabet
                         // alphabet size is added to avoid modulo on negative numbers
-                        var currentLetter = (input[j + i] - FirstLetterOffset - k + AlphabetSize) % AlphabetSize;
+                        var currentLetter = (encryptedText[j + i] - FirstLetterOffset - k + AlphabetSize) % AlphabetSize;
                         letterOccurrences[currentLetter]++;
                     }
 
@@ -195,7 +197,7 @@ namespace Vigenere
             return new string(key);
         }
 
-        public static double GetScalarProduct(double[] vector1, double[] vector2)
+        private static double GetScalarProduct(double[] vector1, double[] vector2)
         {
             var scalarProduct = 0.0;
             for (var i = 0; i < vector1.Length; i++)
