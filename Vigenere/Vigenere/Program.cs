@@ -43,6 +43,7 @@ namespace Vigenere
 
                     case "-k":
                         Cryptoanalysis(FileNames.EncryptedText, FileNames.CrackedKey);
+                        EncryptFile(FileNames.CrackedKey, FileNames.EncryptedText, FileNames.CrackedText, inverse: true);
                         break;
 
                     default:
