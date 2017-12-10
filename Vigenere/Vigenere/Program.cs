@@ -154,7 +154,7 @@ namespace Vigenere
                 6.749, 7.507, 1.929, 0.095, 5.987, 6.327, 9.056, 2.758, 0.978, 2.360, 0.150, 1.974, 0.974
             };
 
-            var key = new char[keyLength+1];
+            var key = new char[keyLength];
 
             // for each index in key
             for (var i = 0; i < keyLength; i++)
