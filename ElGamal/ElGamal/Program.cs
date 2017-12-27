@@ -36,6 +36,7 @@ namespace ElGamal
                         break;
 
                     case "-d":
+                        Decrypt(FileNames.PrivateKey, FileNames.EncryptedText);
                         break;
 
                     case "-s":
@@ -62,41 +63,77 @@ namespace ElGamal
             var generator = BigInteger.Parse(lines[1]);
 
             var random = new Random();
-            var exponent = random.Next(1, RandomExponentMax);
-            var power = BigInteger.ModPow(generator, exponent, prime);
+            var aliceK = random.Next(1, RandomExponentMax);
+
+            // Alice public key - generator to random number K (g ^ aliceK)
+            var alicePublicKey = BigInteger.ModPow(generator, aliceK, prime);
 
             var output = prime + Environment.NewLine + generator + Environment.NewLine;
-
-            var privateKey = output + exponent + Environment.NewLine;
-            File.WriteAllText(FileNames.PrivateKey, privateKey);
-
-            var publicKey = output + power + Environment.NewLine;
-            File.WriteAllText(FileNames.PublicKey, publicKey);
+            var privateKeyText = output + aliceK + Environment.NewLine;
+            var publicKeyText = output + alicePublicKey + Environment.NewLine;
+            File.WriteAllText(FileNames.PrivateKey, privateKeyText);
+            File.WriteAllText(FileNames.PublicKey, publicKeyText);
         }
 
         public static void Encrypt(string publicKeyFileName, string messageFileName)
         {
             var publicKeyLines = File.ReadAllLines(publicKeyFileName);
             var messageLines = File.ReadAllLines(messageFileName);
-            
-            var random = new Random();
-            var k = random.Next(1, RandomExponentMax);
 
             var message = BigInteger.Parse(messageLines[0]);
             var prime = BigInteger.Parse(publicKeyLines[0]);
-
             if (message >= prime)
                 throw new Exception("m < p condition not met");
 
             var generator = BigInteger.Parse(publicKeyLines[1]);
-            var gk = BigInteger.ModPow(generator, k, prime);
+            var alicePublicKey = BigInteger.Parse(publicKeyLines[2]);
 
-            var publicKey = BigInteger.Parse(publicKeyLines[2]);
-            var bk = BigInteger.ModPow(publicKey, k, prime);
-            var encryptedMessage = (message * bk) % prime;
+            var random = new Random();
+            var bobK = random.Next(1, RandomExponentMax);
 
-            var output = gk + Environment.NewLine + encryptedMessage + Environment.NewLine;
+            // Bobs public key - generator to random number K (g ^ bobK)
+            var bobPublicKey = BigInteger.ModPow(generator, bobK, prime);
+
+            // common encryption key - (generator ^ aliceK) ^ bobK
+            var encryptionKey = BigInteger.ModPow(alicePublicKey, bobK, prime);
+
+            var encryptedMessage = (message * encryptionKey) % prime;
+            var output = bobPublicKey + Environment.NewLine + encryptedMessage + Environment.NewLine;
             File.WriteAllText(FileNames.EncryptedText, output);
+        }
+
+        public static void Decrypt(string privateKeyFileName, string encryptedMessageFileName)
+        {
+            var privateKeyLines = File.ReadAllLines(privateKeyFileName);
+            var encryptedMessageLines = File.ReadAllLines(encryptedMessageFileName);
+
+            var prime = BigInteger.Parse(privateKeyLines[0]);
+            var generator = BigInteger.Parse(privateKeyLines[1]);
+
+            var bobPublicKey = BigInteger.Parse(encryptedMessageLines[0]);
+            var bobK = 1;
+            while (true)
+            {
+                // loop till bob K is found
+                if (BigInteger.ModPow(generator, bobK, prime) == bobPublicKey)
+                    break;
+
+                bobK++;
+            }
+
+            // Alice public key => generator ^ aliceK
+            var aliceK = BigInteger.Parse(privateKeyLines[2]);
+            var alicePublicKey = BigInteger.ModPow(generator, aliceK, prime);
+
+            // encryption key => (generator ^ aliceK) ^ bobK
+            var encryptionKey = BigInteger.ModPow(alicePublicKey, bobK, prime);
+
+            var encryptedMessage = BigInteger.Parse(encryptedMessageLines[1]);
+            var encryptionKeyInverse = BigInteger.ModPow(encryptionKey, prime - 2, prime);
+            var decryptedMessage = (encryptedMessage * encryptionKeyInverse) % prime;
+
+            var output = decryptedMessage + Environment.NewLine;
+            File.WriteAllText(FileNames.DecryptedText, output);
         }
     }
 }
