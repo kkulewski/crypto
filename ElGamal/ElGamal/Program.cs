@@ -6,6 +6,8 @@ namespace ElGamal
 {
     class Program
     {
+        public const int RandomExponentMax = 100;
+
         static void Main(string[] args)
         {
             const string parameterHelp = " Try:" +
@@ -30,6 +32,7 @@ namespace ElGamal
                         break;
 
                     case "-e":
+                        Encrypt(FileNames.PublicKey, FileNames.PlainText);
                         break;
 
                     case "-d":
@@ -59,7 +62,7 @@ namespace ElGamal
             var generator = BigInteger.Parse(lines[1]);
 
             var random = new Random();
-            var exponent = random.Next(1, 100);
+            var exponent = random.Next(1, RandomExponentMax);
             var power = BigInteger.ModPow(generator, exponent, prime);
 
             var output = prime + Environment.NewLine + generator + Environment.NewLine;
@@ -69,6 +72,31 @@ namespace ElGamal
 
             var publicKey = output + power + Environment.NewLine;
             File.WriteAllText(FileNames.PublicKey, publicKey);
+        }
+
+        public static void Encrypt(string publicKeyFileName, string messageFileName)
+        {
+            var publicKeyLines = File.ReadAllLines(publicKeyFileName);
+            var messageLines = File.ReadAllLines(messageFileName);
+            
+            var random = new Random();
+            var k = random.Next(1, RandomExponentMax);
+
+            var message = BigInteger.Parse(messageLines[0]);
+            var prime = BigInteger.Parse(publicKeyLines[0]);
+
+            if (message >= prime)
+                throw new Exception("m < p condition not met");
+
+            var generator = BigInteger.Parse(publicKeyLines[1]);
+            var gk = BigInteger.ModPow(generator, k, prime);
+
+            var publicKey = BigInteger.Parse(publicKeyLines[2]);
+            var bk = BigInteger.ModPow(publicKey, k, prime);
+            var encryptedMessage = (message * bk) % prime;
+
+            var output = gk + Environment.NewLine + encryptedMessage + Environment.NewLine;
+            File.WriteAllText(FileNames.EncryptedText, output);
         }
     }
 }
