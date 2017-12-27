@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Numerics;
 
 namespace ElGamal
 {
@@ -24,6 +26,7 @@ namespace ElGamal
                 switch (args[0])
                 {
                     case "-k":
+                        GenerateKeys(FileNames.Generator);
                         break;
 
                     case "-e":
@@ -47,6 +50,25 @@ namespace ElGamal
             {
                 Console.WriteLine(e.Message);
             }
+        }
+
+        public static void GenerateKeys(string generatorFileName)
+        {
+            var lines = File.ReadAllLines(generatorFileName);
+            var prime = BigInteger.Parse(lines[0]);
+            var generator = BigInteger.Parse(lines[1]);
+
+            var random = new Random();
+            var exponent = random.Next(1, 100);
+            var power = BigInteger.ModPow(generator, exponent, prime);
+
+            var output = prime + Environment.NewLine + generator + Environment.NewLine;
+
+            var privateKey = output + exponent + Environment.NewLine;
+            File.WriteAllText(FileNames.PrivateKey, privateKey);
+
+            var publicKey = output + power + Environment.NewLine;
+            File.WriteAllText(FileNames.PublicKey, publicKey);
         }
     }
 }
