@@ -58,3 +58,15 @@
 - arg1: p (prepare text), e (encrypt), d (decrypt), k (brute force)
 #### Remarks
 - only english texts are valid because of defined letter frequencies
+
+
+## 6. ElGamal
+#### Prerequisites
+- plain.text - source text for encryption
+- message.txt - source text for signature
+- elgamal.txt - generator and prime number
+#### Usage
+- ElGamal.exe -[k|e|d|s|v]
+- arg1: k (generate keys), e (encrypt), d (decrypt), s (sign), v (verify signature)
+#### Remarks
+- source text consists of a single number (interpreted as a number, not ASCII)
