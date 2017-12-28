@@ -40,6 +40,7 @@ namespace ElGamal
                         break;
 
                     case "-s":
+                        Sign(FileNames.PrivateKey, FileNames.MessageText);
                         break;
 
                     case "-v":
@@ -134,6 +135,43 @@ namespace ElGamal
 
             var output = decryptedMessage + Environment.NewLine;
             File.WriteAllText(FileNames.DecryptedText, output);
+        }
+
+        public static void Sign(string privateKeyFileName, string messageFileName)
+        {
+            var privateKeyLines = File.ReadAllLines(privateKeyFileName);
+            var messageLines = File.ReadAllLines(messageFileName);
+
+            var prime = BigInteger.Parse(privateKeyLines[0]);
+            var generator = BigInteger.Parse(privateKeyLines[1]);
+            var aliceK = BigInteger.Parse(privateKeyLines[2]);
+
+            var message = BigInteger.Parse(messageLines[0]);
+
+            var random = new Random();
+
+            // generate r
+            int k;
+            while (true)
+            {
+                var primeInt = prime < int.MaxValue ? (int) prime : int.MaxValue;
+                k = random.Next(1, primeInt);
+                var relativelyPrime = BigInteger.GreatestCommonDivisor(k, prime - 1) == 1;
+                if (relativelyPrime)
+                {
+                    break;
+                }
+            }
+
+            var r = BigInteger.ModPow(generator, k, prime);
+
+            // generate x
+            var kInverse = BigInteger.ModPow(k, prime - 2, prime);
+            var x = ((message - aliceK * r) * kInverse) % (prime - 1);
+            var xAbs = BigInteger.Abs(x);
+
+            var output = r + Environment.NewLine + xAbs + Environment.NewLine;
+            File.WriteAllText(FileNames.Signature, output);
         }
     }
 }
