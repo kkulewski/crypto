@@ -44,7 +44,8 @@ namespace ElGamal
                         break;
 
                     case "-v":
-                        VerifySignature(FileNames.PublicKey, FileNames.MessageText, FileNames.Signature);
+                        var result = VerifySignature(FileNames.PublicKey, FileNames.MessageText, FileNames.Signature);
+                        Console.WriteLine(result);
                         break;
 
                     default:
@@ -178,7 +179,7 @@ namespace ElGamal
             File.WriteAllText(FileNames.Signature, output);
         }
 
-        public static void VerifySignature(string publicKeyFileName, string messageFileName, string signatureFileName)
+        public static string VerifySignature(string publicKeyFileName, string messageFileName, string signatureFileName)
         {
             var publicKeyLines = File.ReadAllLines(publicKeyFileName);
             var messageLines = File.ReadAllLines(messageFileName);
@@ -205,6 +206,7 @@ namespace ElGamal
             }
 
             File.WriteAllText(FileNames.VerifySignature, output);
+            return output;
         }
 
         public static BigInteger MultiplicativeInverse(BigInteger a, BigInteger m)
