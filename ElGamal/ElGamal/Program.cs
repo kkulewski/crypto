@@ -44,6 +44,7 @@ namespace ElGamal
                         break;
 
                     case "-v":
+                        VerifySignature(FileNames.PublicKey, FileNames.MessageText, FileNames.Signature);
                         break;
 
                     default:
@@ -145,7 +146,6 @@ namespace ElGamal
             var prime = BigInteger.Parse(privateKeyLines[0]);
             var generator = BigInteger.Parse(privateKeyLines[1]);
             var aliceK = BigInteger.Parse(privateKeyLines[2]);
-
             var message = BigInteger.Parse(messageLines[0]);
 
             var random = new Random();
@@ -164,14 +164,78 @@ namespace ElGamal
             }
 
             var r = BigInteger.ModPow(generator, k, prime);
-
+            
             // generate x
-            var kInverse = BigInteger.ModPow(k, prime - 2, prime);
-            var x = ((message - aliceK * r) * kInverse) % (prime - 1);
-            var xAbs = BigInteger.Abs(x);
+            var kInverse = MultiplicativeInverse(k, prime - 1);
+            // force positive numbers by adding a span (modulo bound * multiplier)
+            var mod = prime - 1;
+            var span = mod * 10000;
+            var x1 = message - aliceK * r + span;
+            var x2 = x1 * kInverse + span;
+            var x = x2 % mod;
 
-            var output = r + Environment.NewLine + xAbs + Environment.NewLine;
+            var output = r + Environment.NewLine + x + Environment.NewLine;
             File.WriteAllText(FileNames.Signature, output);
+        }
+
+        public static void VerifySignature(string publicKeyFileName, string messageFileName, string signatureFileName)
+        {
+            var publicKeyLines = File.ReadAllLines(publicKeyFileName);
+            var messageLines = File.ReadAllLines(messageFileName);
+            var signatureLines = File.ReadAllLines(signatureFileName);
+
+            var prime = BigInteger.Parse(publicKeyLines[0]);
+            var generator = BigInteger.Parse(publicKeyLines[1]);
+            var publicKey = BigInteger.Parse(publicKeyLines[2]);
+            var message = BigInteger.Parse(messageLines[0]);
+            var r = BigInteger.Parse(signatureLines[0]);
+            var x = BigInteger.Parse(signatureLines[1]);
+
+            var left = BigInteger.ModPow(generator, message, prime);
+            var right = (BigInteger.ModPow(publicKey, r, prime) * BigInteger.ModPow(r, x, prime)) % prime;
+
+            string output;
+            if (r < 1 || r > prime - 1 || left != right)
+            {
+                output = "Invalid signature";
+            }
+            else
+            {
+                output = "Valid signature";
+            }
+
+            File.WriteAllText(FileNames.VerifySignature, output);
+        }
+
+        public static BigInteger MultiplicativeInverse(BigInteger a, BigInteger m)
+        {
+            BigInteger x0 = 0;
+            BigInteger x1 = 1;
+            var m0 = m;
+
+            if (m == 0)
+            {
+                return 1;
+            }
+
+            while (a > 1)
+            {
+                var q = a / m;
+                var t = m;
+                m = a % m;
+                a = t;
+
+                t = x0;
+                x0 = x1 - q * x0;
+                x1 = t;
+            }
+
+            if (x1 < 0)
+            {
+                x1 += m0;
+            }
+
+            return x1;
         }
     }
 }
