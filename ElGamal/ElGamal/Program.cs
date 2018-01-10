@@ -163,17 +163,15 @@ namespace ElGamal
                     break;
                 }
             }
-
             var r = BigInteger.ModPow(generator, k, prime);
             
             // generate x
             var kInverse = MultiplicativeInverse(k, prime - 1);
-            // force positive numbers by adding a span (modulo bound * multiplier)
             var mod = prime - 1;
-            var span = mod * 10000;
-            var x1 = message - aliceK * r + span;
-            var x2 = x1 * kInverse + span;
-            var x = x2 % mod;
+            // ensure modulo operations are performed on positive numbers
+            // by adding a "span" (modulo bound * any high-enough multiplier)
+            var x1 = message - (aliceK * r) + (mod * 10000);
+            var x = (x1 * kInverse) % mod;
 
             var output = r + Environment.NewLine + x + Environment.NewLine;
             File.WriteAllText(FileNames.Signature, output);
