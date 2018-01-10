@@ -194,7 +194,7 @@ namespace ElGamal
             var right = (BigInteger.ModPow(publicKey, r, prime) * BigInteger.ModPow(r, x, prime)) % prime;
 
             string output;
-            if (r >= 1 || r < prime || left == right)
+            if (r >= 1 && r < prime && left == right)
             {
                 output = "Valid signature";
             }
