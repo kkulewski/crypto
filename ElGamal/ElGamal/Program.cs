@@ -196,13 +196,13 @@ namespace ElGamal
             var right = (BigInteger.ModPow(publicKey, r, prime) * BigInteger.ModPow(r, x, prime)) % prime;
 
             string output;
-            if (r < 1 || r > prime - 1 || left != right)
+            if (r >= 1 || r < prime || left == right)
             {
-                output = "Invalid signature";
+                output = "Valid signature";
             }
             else
             {
-                output = "Valid signature";
+                output = "Invalid signature";
             }
 
             File.WriteAllText(FileNames.VerifySignature, output);
